@@ -45,5 +45,23 @@
           }
         }
       }
-    }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "installOhMyZshConfig": true,
+            "upgradePackages": true,
+            "username": "vscode",
+            "userUid": "automatic",
+            "userGid": "1001"
+        }
+    },
+    "postStartCommand": {
+      "plugins": "sed -i.bak \"s/^plugins=(.*)/plugins=(git command-not-found sudo zsh-syntax-highlighting zsh-autosuggestions)/\" \"$HOME/.zshrc\"",
+      "zshconfig": "sed -i.bak \"s|# alias zshconfig=\"mate ~/.zshrc\"|alias zshconfig=\"nano ~/.zshrc\"|\" \"$HOME/.zshrc\"",
+      "ohmyzsh": "sed -i.bak \"s|# alias ohmyzsh=\"mate ~/.oh-my-zsh\"|alias ohmyzsh=\"nano ~/.oh-my-zsh\"|\" \"$HOME/.zshrc\""
+    },
+    "postAttachCommand": "exec zsh"
   }
