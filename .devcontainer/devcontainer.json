@@ -18,8 +18,32 @@
           "bierner.markdown-mermaid",
           "rodrigovallades.es7-react-js-snippets",
           "qwtel.sqlite-viewer",
-          "DavidAnson.vscode-markdownlint"
-        ]
+          "DavidAnson.vscode-markdownlint",
+          "ms-azuretools.vscode-docker"
+        ],
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash",
+          "terminal.integrated.profiles.linux": {
+            "bash": {
+              "path": "bash",
+              "icon": "terminal-bash"
+            },
+            "zsh": {
+              "path": "zsh"
+            },
+            "fish": {
+              "path": "fish"
+            },
+            "tmux": {
+              "path": "tmux",
+              "icon": "terminal-tmux"
+            },
+            "pwsh": {
+              "path": "pwsh",
+              "icon": "terminal-powershell"
+            }
+          }
+        }
       }
     }
   }
