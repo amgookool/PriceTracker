@@ -1,0 +1,43 @@
+###
+
+# @name getAllSchedules
+GET {{baseUrl}}/schedules
+Content-Type: application/json
+###
+
+# @name getAllSchedulesForUser
+@userId = 1
+GET {{baseUrl}}/schedules/{{userId}}
+Content-Type: application/json
+###
+
+# @name addSchedule
+POST {{baseUrl}}/schedules
+Content-Type: application/json
+
+{
+    "name": "product1",
+    "productUrl": "http://www.product1.com",
+    "desiredPrice": 20.50,
+    "scrapeFrequency": "2 days"
+}
+###
+
+# @name modifyProduct2Track
+@productId = 1
+PUT {{baseUrl}}/schedules/{{productId}}
+Content-Type: application/json
+
+{
+    "name": "product1",
+    "productUrl": "http://www.product1.com",
+    "desiredPrice": 20.50,
+    "scrapeFrequency": "2 days"
+}
+###
+
+# @name deleteProduct2Track
+@productId = 1
+DELETE {{baseUrl}}/schedules/{{productId}}
+Content-Type: application/json
+###

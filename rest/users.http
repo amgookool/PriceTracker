@@ -1,0 +1,40 @@
+@userId = 1
+###
+
+# @name getAllUsers
+GET {{baseUrl}}/users
+Content-Type: application/json
+###
+
+# @name getUser
+GET {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+###
+
+# @name addUser
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "username": "amgookool",
+    "email": "koolkeyztt@gmail.com",
+    "password": "P@ssword123!",
+    "role": "ADMIN"
+}
+###
+
+# @name updateUser
+PUT {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+
+{
+    "username": "amgookool",
+    "role": "ADMIN",
+    "password": "P@ssword123!"
+}
+###
+
+# @name removeUser
+DELETE {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+###

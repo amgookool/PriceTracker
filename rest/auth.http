@@ -1,0 +1,11 @@
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username":"admin",
+    "password":"P@ssword123!"
+}
+###
+@token = {{login.response.body.$.token}}
+
