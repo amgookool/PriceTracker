@@ -10,6 +10,17 @@ The project uses a Postgres database to store the tracked products and the track
 
 The project uses the Hono RPC to communicate between the server and the frontend.
 
+## Environment Variables
+
+The PriceTracker application requires environment variables in order for the application to run as intended, these environment variables are:
+
+- **PORT**: The port of the server.
+- **DATABASE**: The connection string of the SQL database.
+- **ADMIN_USERNAME**: The username of the user that will be migrated on first launch
+- **ADMIN_PASSWORD**: The password of the user that will be migrated on first launch
+- **JWT_SECRET**: The secret key for JWT tokens
+- **JWT_EXPIRE_MINS**: The expire time for jwt access tokens
+
 ## Project Structure
 
 This project is split into different modules/directories each serving a different purpose which are:
