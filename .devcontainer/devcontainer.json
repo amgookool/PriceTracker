@@ -60,6 +60,8 @@
     },
     "postStartCommand": {
       "plugins": "sed -i.bak \"s/^plugins=(.*)/plugins=(git command-not-found sudo zsh-syntax-highlighting zsh-autosuggestions)/\" \"$HOME/.zshrc\"",
+      "zsh-syntax-highlighting": "git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting",
+      "zsh-autosuggestions": "git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions",
       "zshconfig": "sed -i.bak \"s|# alias zshconfig=\"mate ~/.zshrc\"|alias zshconfig=\"nano ~/.zshrc\"|\" \"$HOME/.zshrc\"",
       "ohmyzsh": "sed -i.bak \"s|# alias ohmyzsh=\"mate ~/.oh-my-zsh\"|alias ohmyzsh=\"nano ~/.oh-my-zsh\"|\" \"$HOME/.zshrc\""
     },
