@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "dev:backend": "bun --watch server/index.ts",
-    "dev:frontend": "",
+    "dev:frontend": "cd frontend && bun run dev",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "build": ""
+    "build": "cd frontend && bun run build"
   },
   "devDependencies": {
     "@types/bun": "latest",
