@@ -1,5 +1,31 @@
 {
   "files.associations": {
     "*.css": "tailwindcss"
-}
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true,
+    "**/frontend/dist": false,
+    "**/frontend": false,
+    "**/scheduler": false,
+    "**/scraper": false,
+    "**/.drizzle": true
+  },
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "baseUrl": "http://localhost:2500/api"
+    }
+  },
+  "rest-client.previewOption": "full",
+  "rest-client.previewColumn": "beside",
+  "rest-client.logLevel": "verbose",
+  "rest-client.fontSize": 18,
+  "rest-client.fontWeight": "bold",
+  "rest-client.fontFamily": "Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace, 'Droid Sans Fallback'"
 }

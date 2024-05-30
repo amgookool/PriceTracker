@@ -1,6 +1,6 @@
 {
   "name": "pricetracker",
-  "module": "index.ts",
+  "module": "server/index.ts",
   "type": "module",
   "scripts": {
     "dev:backend": "bun --watch server/index.ts",
@@ -21,6 +21,7 @@
     "axios": "^1.7.2",
     "cheerio": "^1.0.0-rc.12",
     "drizzle-orm": "^0.30.10",
+    "drizzle-zod": "^0.5.1",
     "hono": "^4.4.0",
     "zod": "^3.23.8"
   }
