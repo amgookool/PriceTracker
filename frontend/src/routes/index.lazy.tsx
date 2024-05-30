@@ -1,5 +1,5 @@
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/Navigation/NavBar";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -8,7 +8,10 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   return (
     <>
-      <Link to="/login">Go to Login</Link>
+      <div className="flex min-h-screen w-full flex-col">
+        <NavBar />
+        <Link to="/login">Go to Login</Link>
+      </div>
     </>
   );
 }

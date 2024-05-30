@@ -3,6 +3,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { CookiesProvider } from "react-cookie";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
@@ -23,9 +24,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <ThemeProvider defaultTheme="dark" storageKey="tracker-ui-theme">
-      <RouterProvider router={router} />
-      </ThemeProvider>
+      <CookiesProvider defaultSetOptions={{ path: "/" }}>
+        <ThemeProvider defaultTheme="dark" storageKey="tracker-ui-theme">
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </CookiesProvider>
     </StrictMode>
   );
 }
