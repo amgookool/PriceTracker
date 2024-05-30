@@ -18,10 +18,10 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias:{
+    alias: {
       "@": path.resolve(import.meta.dir, "./src"),
       "@server": path.resolve(import.meta.dir, "../server"),
       "@types": path.resolve(import.meta.dir, "../types"),
-    }
-  }
+    },
+  },
 });

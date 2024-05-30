@@ -20,7 +20,8 @@
           "qwtel.sqlite-viewer",
           "DavidAnson.vscode-markdownlint",
           "ms-azuretools.vscode-docker",
-          "bradlc.vscode-tailwindcss"
+          "bradlc.vscode-tailwindcss",
+          "SuhelMakkad.shadcn-ui"
         ],
         "settings": {
           "terminal.integrated.defaultProfile.linux": "bash",
