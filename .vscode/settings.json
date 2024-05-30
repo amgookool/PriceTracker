@@ -1,7 +1,4 @@
 {
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -16,11 +13,14 @@
     "**/scraper": false,
     "**/.drizzle": true
   },
-  "terminal.integrated.cwd": "${workspaceFolder}",
+  "terminal.integrated.cwd": "${workspaceFolder}/frontend",
   "rest-client.environmentVariables": {
     "$shared": {
       "baseUrl": "http://localhost:2500/api"
     }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
   },
   "rest-client.previewOption": "full",
   "rest-client.previewColumn": "beside",

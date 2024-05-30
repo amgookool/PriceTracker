@@ -21,7 +21,8 @@
           "DavidAnson.vscode-markdownlint",
           "ms-azuretools.vscode-docker",
           "bradlc.vscode-tailwindcss",
-          "SuhelMakkad.shadcn-ui"
+          "SuhelMakkad.shadcn-ui",
+          "humao.rest-client"
         ],
         "settings": {
           "terminal.integrated.defaultProfile.linux": "bash",

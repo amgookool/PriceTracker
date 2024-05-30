@@ -13,18 +13,48 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LayoutImport } from './routes/_layout'
 
 // Create Virtual Routes
 
+const UsersLazyImport = createFileRoute('/users')()
+const SettingsLazyImport = createFileRoute('/settings')()
+const SchedulesLazyImport = createFileRoute('/schedules')()
+const ProductsLazyImport = createFileRoute('/products')()
 const LoginLazyImport = createFileRoute('/login')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
+const UsersLazyRoute = UsersLazyImport.update({
+  path: '/users',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/users.lazy').then((d) => d.Route))
+
+const SettingsLazyRoute = SettingsLazyImport.update({
+  path: '/settings',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
+
+const SchedulesLazyRoute = SchedulesLazyImport.update({
+  path: '/schedules',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/schedules.lazy').then((d) => d.Route))
+
+const ProductsLazyRoute = ProductsLazyImport.update({
+  path: '/products',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/products.lazy').then((d) => d.Route))
+
 const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -42,11 +72,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LayoutImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/schedules': {
+      id: '/schedules'
+      path: '/schedules'
+      fullPath: '/schedules'
+      preLoaderRoute: typeof SchedulesLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -57,6 +122,10 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   LoginLazyRoute,
+  ProductsLazyRoute,
+  SchedulesLazyRoute,
+  SettingsLazyRoute,
+  UsersLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -68,14 +137,34 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/login"
+        "/_layout",
+        "/login",
+        "/products",
+        "/schedules",
+        "/settings",
+        "/users"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/_layout": {
+      "filePath": "_layout.tsx"
+    },
     "/login": {
       "filePath": "login.lazy.tsx"
+    },
+    "/products": {
+      "filePath": "products.lazy.tsx"
+    },
+    "/schedules": {
+      "filePath": "schedules.lazy.tsx"
+    },
+    "/settings": {
+      "filePath": "settings.lazy.tsx"
+    },
+    "/users": {
+      "filePath": "users.lazy.tsx"
     }
   }
 }
