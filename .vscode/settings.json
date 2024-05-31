@@ -9,13 +9,13 @@
     "**/node_modules": true,
     "**/frontend/dist": false,
     "**/frontend": false,
-    "**/server": true,
+    "**/server": false,
     "**/rest": true,
     "**/scheduler": true,
     "**/scraper": true,
-    "**/.drizzle": true
+    "**/.drizzle": false
   },
-  "terminal.integrated.cwd": "${workspaceFolder}/frontend",
+  "terminal.integrated.cwd": "${workspaceFolder}",
   "rest-client.environmentVariables": {
     "$shared": {
       "baseUrl": "http://localhost:2500/api"
