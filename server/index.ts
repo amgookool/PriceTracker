@@ -1,4 +1,10 @@
 import app from "./app";
+import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import { db } from "@server/database";
+import { performMigrations } from "./migrate";
+
+await migrate(db, { migrationsFolder: "./.drizzle" });
+await performMigrations();
 
 const server = Bun.serve({
   port: process.env.PORT || 2500,

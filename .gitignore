@@ -143,4 +143,4 @@ dist
 *.session.sql
 
 # Drizzle migration folder (Ignore since db is sqlite)
-.drizzle
+# .drizzle

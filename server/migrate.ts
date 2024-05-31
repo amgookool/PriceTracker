@@ -1,6 +1,4 @@
 import { UserService } from "./services";
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
-import { db } from "@server/database";
 
 const username = process.env.ADMIN_USERNAME || "admin";
 const email = process.env.ADMIN_EMAIL || "amgookool@hotmail.com";
@@ -20,5 +18,6 @@ const migrateUser = async (
   }
 };
 
-await migrateUser(username, email, password);
-
+export const performMigrations = async () => {
+  await migrateUser(username, email, password);
+};

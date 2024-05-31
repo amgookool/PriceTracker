@@ -29,5 +29,58 @@
   "rest-client.logLevel": "verbose",
   "rest-client.fontSize": 18,
   "rest-client.fontWeight": "bold",
-  "rest-client.fontFamily": "Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace, 'Droid Sans Fallback'"
+  "rest-client.fontFamily": "Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace, 'Droid Sans Fallback'",
+  "sqltools.useNodeRuntime": true,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "192.168.33.58",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Mondeum-UK",
+      "group": "Test-Server",
+      "database": "mondeum-uk",
+      "username": "monduser",
+      "password": "pass1234"
+    },
+    {
+      "previewLimit": 50,
+      "server": "192.168.33.58",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Mondeum-KY",
+      "group": "Test-Server",
+      "database": "mondeum-ky",
+      "username": "monduser",
+      "password": "pass1234"
+    },
+    {
+      "previewLimit": 50,
+      "server": "192.168.33.58",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Mondeum-TT",
+      "group": "Test-Server",
+      "database": "mondeum-tt",
+      "username": "monduser",
+      "password": "pass1234"
+    },
+    {
+      "previewLimit": 50,
+      "server": "192.168.33.58",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Mondeum-US",
+      "group": "Test-Server",
+      "database": "mondeum-us",
+      "username": "monduser",
+      "password": "pass1234"
+    },
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "PriceTracker",
+      "database": "./pricetracker.sqlite"
+    }
+  ]
 }
