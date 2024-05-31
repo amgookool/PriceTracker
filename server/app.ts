@@ -15,30 +15,31 @@ const app = new Hono();
 app.use(csrf());
 app.use("*", logger());
 app.use(trimTrailingSlash());
-app.use(
-  "/api/users/*",
-  jwt({
-    secret: process.env.JWT_SECRET || "secret",
-    alg: "HS256",
-    cookie: "access_token",
-  })
-);
-app.use(
-  "/api/products/*",
-  jwt({
-    secret: process.env.JWT_SECRET || "secret",
-    alg: "HS256",
-    cookie: "access_token",
-  })
-);
-app.use(
-  "/api/schedules/*",
-  jwt({
-    secret: process.env.JWT_SECRET || "secret",
-    alg: "HS256",
-    cookie: "access_token",
-  })
-);
+app
+  .use(
+    "/api/users/*",
+    jwt({
+      secret: process.env.JWT_SECRET || "secret",
+      alg: "HS256",
+      cookie: "access_token",
+    })
+  )
+  .use(
+    "/api/products/*",
+    jwt({
+      secret: process.env.JWT_SECRET || "secret",
+      alg: "HS256",
+      cookie: "access_token",
+    })
+  )
+  .use(
+    "/api/schedules/*",
+    jwt({
+      secret: process.env.JWT_SECRET || "secret",
+      alg: "HS256",
+      cookie: "access_token",
+    })
+  );
 
 const apiRoutes = app
   .basePath("/api")

@@ -17,34 +17,14 @@ import { Route as LayoutImport } from './routes/_layout'
 
 // Create Virtual Routes
 
-const UsersLazyImport = createFileRoute('/users')()
-const SettingsLazyImport = createFileRoute('/settings')()
-const SchedulesLazyImport = createFileRoute('/schedules')()
-const ProductsLazyImport = createFileRoute('/products')()
 const LoginLazyImport = createFileRoute('/login')()
-const IndexLazyImport = createFileRoute('/')()
+const LayoutIndexLazyImport = createFileRoute('/_layout/')()
+const LayoutUsersLazyImport = createFileRoute('/_layout/users')()
+const LayoutSettingsLazyImport = createFileRoute('/_layout/settings')()
+const LayoutSchedulesLazyImport = createFileRoute('/_layout/schedules')()
+const LayoutProductsLazyImport = createFileRoute('/_layout/products')()
 
 // Create/Update Routes
-
-const UsersLazyRoute = UsersLazyImport.update({
-  path: '/users',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/users.lazy').then((d) => d.Route))
-
-const SettingsLazyRoute = SettingsLazyImport.update({
-  path: '/settings',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
-
-const SchedulesLazyRoute = SchedulesLazyImport.update({
-  path: '/schedules',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/schedules.lazy').then((d) => d.Route))
-
-const ProductsLazyRoute = ProductsLazyImport.update({
-  path: '/products',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/products.lazy').then((d) => d.Route))
 
 const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
@@ -56,22 +36,41 @@ const LayoutRoute = LayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexLazyRoute = IndexLazyImport.update({
+const LayoutIndexLazyRoute = LayoutIndexLazyImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/index.lazy').then((d) => d.Route))
+
+const LayoutUsersLazyRoute = LayoutUsersLazyImport.update({
+  path: '/users',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/users.lazy').then((d) => d.Route))
+
+const LayoutSettingsLazyRoute = LayoutSettingsLazyImport.update({
+  path: '/settings',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout/settings.lazy').then((d) => d.Route),
+)
+
+const LayoutSchedulesLazyRoute = LayoutSchedulesLazyImport.update({
+  path: '/schedules',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout/schedules.lazy').then((d) => d.Route),
+)
+
+const LayoutProductsLazyRoute = LayoutProductsLazyImport.update({
+  path: '/products',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout/products.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/_layout': {
       id: '/_layout'
       path: ''
@@ -86,33 +85,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
-    '/products': {
-      id: '/products'
+    '/_layout/products': {
+      id: '/_layout/products'
       path: '/products'
       fullPath: '/products'
-      preLoaderRoute: typeof ProductsLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutProductsLazyImport
+      parentRoute: typeof LayoutImport
     }
-    '/schedules': {
-      id: '/schedules'
+    '/_layout/schedules': {
+      id: '/_layout/schedules'
       path: '/schedules'
       fullPath: '/schedules'
-      preLoaderRoute: typeof SchedulesLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutSchedulesLazyImport
+      parentRoute: typeof LayoutImport
     }
-    '/settings': {
-      id: '/settings'
+    '/_layout/settings': {
+      id: '/_layout/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SettingsLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutSettingsLazyImport
+      parentRoute: typeof LayoutImport
     }
-    '/users': {
-      id: '/users'
+    '/_layout/users': {
+      id: '/_layout/users'
       path: '/users'
       fullPath: '/users'
-      preLoaderRoute: typeof UsersLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutUsersLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutIndexLazyImport
+      parentRoute: typeof LayoutImport
     }
   }
 }
@@ -120,12 +126,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexLazyRoute,
+  LayoutRoute: LayoutRoute.addChildren({
+    LayoutProductsLazyRoute,
+    LayoutSchedulesLazyRoute,
+    LayoutSettingsLazyRoute,
+    LayoutUsersLazyRoute,
+    LayoutIndexLazyRoute,
+  }),
   LoginLazyRoute,
-  ProductsLazyRoute,
-  SchedulesLazyRoute,
-  SettingsLazyRoute,
-  UsersLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -136,35 +144,42 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
         "/_layout",
-        "/login",
-        "/products",
-        "/schedules",
-        "/settings",
-        "/users"
+        "/login"
       ]
     },
-    "/": {
-      "filePath": "index.lazy.tsx"
-    },
     "/_layout": {
-      "filePath": "_layout.tsx"
+      "filePath": "_layout.tsx",
+      "children": [
+        "/_layout/products",
+        "/_layout/schedules",
+        "/_layout/settings",
+        "/_layout/users",
+        "/_layout/"
+      ]
     },
     "/login": {
       "filePath": "login.lazy.tsx"
     },
-    "/products": {
-      "filePath": "products.lazy.tsx"
+    "/_layout/products": {
+      "filePath": "_layout/products.lazy.tsx",
+      "parent": "/_layout"
     },
-    "/schedules": {
-      "filePath": "schedules.lazy.tsx"
+    "/_layout/schedules": {
+      "filePath": "_layout/schedules.lazy.tsx",
+      "parent": "/_layout"
     },
-    "/settings": {
-      "filePath": "settings.lazy.tsx"
+    "/_layout/settings": {
+      "filePath": "_layout/settings.lazy.tsx",
+      "parent": "/_layout"
     },
-    "/users": {
-      "filePath": "users.lazy.tsx"
+    "/_layout/users": {
+      "filePath": "_layout/users.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/": {
+      "filePath": "_layout/index.lazy.tsx",
+      "parent": "/_layout"
     }
   }
 }

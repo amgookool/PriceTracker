@@ -6,11 +6,9 @@ export const Route = createFileRoute('/_layout')({
 
 function LayoutComponent() {
   return (
-    <div>
-      <NavBar/>
-      <div>
-        <Outlet />
-      </div>
+    <div className="flex min-h-screen w-full flex-col">
+      <NavBar />
+      <Outlet />
     </div>
   )
 }
