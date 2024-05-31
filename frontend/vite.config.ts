@@ -7,6 +7,7 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 export default defineConfig({
   plugins: [react(), TanStackRouterVite()],
   build: {
+    // outDir: path.resolve(import.meta.dir, "../server/static"),
     emptyOutDir: true,
   },
   server: {

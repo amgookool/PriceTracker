@@ -1,7 +1,7 @@
-import app from "./app";
+import app from "./server/app";
 import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 import { db } from "@server/database";
-import { performMigrations } from "./migrate";
+import { performMigrations } from "./server/migrate";
 
 await migrate(db, { migrationsFolder: "./.drizzle" });
 await performMigrations();

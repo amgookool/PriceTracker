@@ -10,8 +10,9 @@
     "**/frontend/dist": false,
     "**/frontend": false,
     "**/server": false,
+    "**/server/static": false,
     "**/rest": true,
-    "**/scheduler": true,
+    "**/scheduler": false,
     "**/scraper": true,
     "**/.drizzle": true
   },

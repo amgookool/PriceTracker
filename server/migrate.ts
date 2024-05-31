@@ -10,11 +10,11 @@ const migrateUser = async (
   password: string
 ) => {
   try {
-    console.log("migrate user:", username);
+    console.log("migrating user:", username, "...");
     await UserService.migrateUser(username, email, password);
   } catch (e) {
     const error = e as Error;
-    console.error(`Error Occured migrating user:${error.message}`);
+    console.warn(`Error migrating user:${error.message}`);
   }
 };
 
