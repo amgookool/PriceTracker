@@ -22,7 +22,7 @@ export const authenticationRoute = new Hono().post(
   async (ctx) => {
     const user = await ctx.req.valid("json");
     try {
-      const token = await AuthenticationService.login(
+      const {token, userId, username} = await AuthenticationService.login(
         user.username,
         user.password
       );
@@ -33,7 +33,7 @@ export const authenticationRoute = new Hono().post(
         path: "/",
         maxAge: 60 * 60 * 8, // 8 hours 
       });
-      return ctx.json({ token });
+      return ctx.json({ token, userId, username});
     } catch (e) {
       const error = e as Error;
       throw new HTTPException(401, {

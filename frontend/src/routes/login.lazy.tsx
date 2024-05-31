@@ -9,28 +9,77 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { MdOutlineWarningAmber } from "react-icons/md";
+import api from "@/lib/api";
 import { useForm } from "@tanstack/react-form";
-import type { FieldApi } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import {
+  createFileRoute,
+  useNavigate,
+  useRouter,
+  redirect,
+} from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
+import { toast } from "sonner";
+import { useAuth } from "@/lib/utils";
 
-export const Route = createLazyFileRoute("/login")({
+export const Route = createFileRoute("/login")({
   component: Login,
+  loader: async ({context}) => {
+    if (context.isAuthenticated){
+      throw redirect({
+        to: "/",
+        from: "/login",
+      })
+    }
+  }
 });
 
+const loginUser = async (creds: { username: string; password: string }) => {
+  const response = await api.auth.login.$post({
+    json: creds,
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    if (response.status === 401) {
+      throw new Error("Invalid username or password");
+    } else throw new Error("An error occurred");
+  }
+};
+
 function Login() {
+  const navigate = useNavigate({ from: "/login" });
+  const authUser = useAuth();
+  const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (res) => {
+      toast.success("Logged in successfully");
+      authUser.accessToken = res.token;
+      authUser.login(res.username,res.userId);
+      router.update({
+        context: authUser,
+      });
+
+      navigate({
+        to: "/",
+      });
+    },
+    onError: (error) => {
+      console.error("An error occurred: ", error.message);
+      toast.error(error.message || "An error occurred");
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       username: "",
       password: "",
     },
     onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log(value);
+      mutation.mutate(value);
     },
-    // Add a validator to support Zod usage in Form and Field
     validatorAdapter: zodValidator,
   });
   return (
@@ -83,7 +132,11 @@ function Login() {
                           placeholder="Enter username..."
                         />
                         <span className={"flex text-xs text-red-600"}>
-                          <FieldInfo field={field} />
+                          {field.state.meta.errors ? (
+                            <em role="alert">
+                              {field.state.meta.errors.join(", ")}
+                            </em>
+                          ) : null}
                         </span>
                       </>
                     );
@@ -123,7 +176,11 @@ function Login() {
                           placeholder="Enter password..."
                         />
                         <span className={"flex text-xs text-red-600"}>
-                          <FieldInfo field={field} />
+                          {field.state.meta.errors ? (
+                            <em role="alert">
+                              {field.state.meta.errors.join(", ")}
+                            </em>
+                          ) : null}
                         </span>
                       </>
                     );
@@ -148,17 +205,6 @@ function Login() {
           </form>
         </Card>
       </div>
-    </>
-  );
-}
-
-function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
-  return (
-    <>
-      {field.state.meta.touchedErrors ? (
-        <em>{field.state.meta.touchedErrors}</em>
-      ) : null}
-      {field.state.meta.isValidating ? "Validating..." : null}
     </>
   );
 }

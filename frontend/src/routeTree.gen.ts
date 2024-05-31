@@ -13,16 +13,25 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LayoutImport } from './routes/_layout'
+import { Route as DashboardImport } from './routes/_dashboard'
+import { Route as DashboardAuthImport } from './routes/_dashboard/_auth'
 
 // Create Virtual Routes
 
 const LoginLazyImport = createFileRoute('/login')()
-const LayoutIndexLazyImport = createFileRoute('/_layout/')()
-const LayoutUsersLazyImport = createFileRoute('/_layout/users')()
-const LayoutSettingsLazyImport = createFileRoute('/_layout/settings')()
-const LayoutSchedulesLazyImport = createFileRoute('/_layout/schedules')()
-const LayoutProductsLazyImport = createFileRoute('/_layout/products')()
+const DashboardAuthIndexLazyImport = createFileRoute('/_dashboard/_auth/')()
+const DashboardAuthUsersLazyImport = createFileRoute(
+  '/_dashboard/_auth/users',
+)()
+const DashboardAuthSettingsLazyImport = createFileRoute(
+  '/_dashboard/_auth/settings',
+)()
+const DashboardAuthSchedulesLazyImport = createFileRoute(
+  '/_dashboard/_auth/schedules',
+)()
+const DashboardAuthProductsLazyImport = createFileRoute(
+  '/_dashboard/_auth/products',
+)()
 
 // Create/Update Routes
 
@@ -31,51 +40,62 @@ const LoginLazyRoute = LoginLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
+const DashboardRoute = DashboardImport.update({
+  id: '/_dashboard',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutIndexLazyRoute = LayoutIndexLazyImport.update({
+const DashboardAuthRoute = DashboardAuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardAuthIndexLazyRoute = DashboardAuthIndexLazyImport.update({
   path: '/',
-  getParentRoute: () => LayoutRoute,
-} as any).lazy(() => import('./routes/_layout/index.lazy').then((d) => d.Route))
+  getParentRoute: () => DashboardAuthRoute,
+} as any).lazy(() =>
+  import('./routes/_dashboard/_auth.index.lazy').then((d) => d.Route),
+)
 
-const LayoutUsersLazyRoute = LayoutUsersLazyImport.update({
+const DashboardAuthUsersLazyRoute = DashboardAuthUsersLazyImport.update({
   path: '/users',
-  getParentRoute: () => LayoutRoute,
-} as any).lazy(() => import('./routes/_layout/users.lazy').then((d) => d.Route))
+  getParentRoute: () => DashboardAuthRoute,
+} as any).lazy(() =>
+  import('./routes/_dashboard/_auth.users.lazy').then((d) => d.Route),
+)
 
-const LayoutSettingsLazyRoute = LayoutSettingsLazyImport.update({
+const DashboardAuthSettingsLazyRoute = DashboardAuthSettingsLazyImport.update({
   path: '/settings',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => DashboardAuthRoute,
 } as any).lazy(() =>
-  import('./routes/_layout/settings.lazy').then((d) => d.Route),
+  import('./routes/_dashboard/_auth.settings.lazy').then((d) => d.Route),
 )
 
-const LayoutSchedulesLazyRoute = LayoutSchedulesLazyImport.update({
-  path: '/schedules',
-  getParentRoute: () => LayoutRoute,
-} as any).lazy(() =>
-  import('./routes/_layout/schedules.lazy').then((d) => d.Route),
+const DashboardAuthSchedulesLazyRoute = DashboardAuthSchedulesLazyImport.update(
+  {
+    path: '/schedules',
+    getParentRoute: () => DashboardAuthRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/_dashboard/_auth.schedules.lazy').then((d) => d.Route),
 )
 
-const LayoutProductsLazyRoute = LayoutProductsLazyImport.update({
+const DashboardAuthProductsLazyRoute = DashboardAuthProductsLazyImport.update({
   path: '/products',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => DashboardAuthRoute,
 } as any).lazy(() =>
-  import('./routes/_layout/products.lazy').then((d) => d.Route),
+  import('./routes/_dashboard/_auth.products.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_layout': {
-      id: '/_layout'
+    '/_dashboard': {
+      id: '/_dashboard'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof LayoutImport
+      preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -85,40 +105,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/products': {
-      id: '/_layout/products'
+    '/_dashboard/_auth': {
+      id: '/_dashboard/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof DashboardAuthImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/_auth/products': {
+      id: '/_dashboard/_auth/products'
       path: '/products'
       fullPath: '/products'
-      preLoaderRoute: typeof LayoutProductsLazyImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof DashboardAuthProductsLazyImport
+      parentRoute: typeof DashboardAuthImport
     }
-    '/_layout/schedules': {
-      id: '/_layout/schedules'
+    '/_dashboard/_auth/schedules': {
+      id: '/_dashboard/_auth/schedules'
       path: '/schedules'
       fullPath: '/schedules'
-      preLoaderRoute: typeof LayoutSchedulesLazyImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof DashboardAuthSchedulesLazyImport
+      parentRoute: typeof DashboardAuthImport
     }
-    '/_layout/settings': {
-      id: '/_layout/settings'
+    '/_dashboard/_auth/settings': {
+      id: '/_dashboard/_auth/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof LayoutSettingsLazyImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof DashboardAuthSettingsLazyImport
+      parentRoute: typeof DashboardAuthImport
     }
-    '/_layout/users': {
-      id: '/_layout/users'
+    '/_dashboard/_auth/users': {
+      id: '/_dashboard/_auth/users'
       path: '/users'
       fullPath: '/users'
-      preLoaderRoute: typeof LayoutUsersLazyImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof DashboardAuthUsersLazyImport
+      parentRoute: typeof DashboardAuthImport
     }
-    '/_layout/': {
-      id: '/_layout/'
+    '/_dashboard/_auth/': {
+      id: '/_dashboard/_auth/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexLazyImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof DashboardAuthIndexLazyImport
+      parentRoute: typeof DashboardAuthImport
     }
   }
 }
@@ -126,12 +153,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  LayoutRoute: LayoutRoute.addChildren({
-    LayoutProductsLazyRoute,
-    LayoutSchedulesLazyRoute,
-    LayoutSettingsLazyRoute,
-    LayoutUsersLazyRoute,
-    LayoutIndexLazyRoute,
+  DashboardRoute: DashboardRoute.addChildren({
+    DashboardAuthRoute: DashboardAuthRoute.addChildren({
+      DashboardAuthProductsLazyRoute,
+      DashboardAuthSchedulesLazyRoute,
+      DashboardAuthSettingsLazyRoute,
+      DashboardAuthUsersLazyRoute,
+      DashboardAuthIndexLazyRoute,
+    }),
   }),
   LoginLazyRoute,
 })
@@ -144,42 +173,49 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_layout",
+        "/_dashboard",
         "/login"
       ]
     },
-    "/_layout": {
-      "filePath": "_layout.tsx",
+    "/_dashboard": {
+      "filePath": "_dashboard.tsx",
       "children": [
-        "/_layout/products",
-        "/_layout/schedules",
-        "/_layout/settings",
-        "/_layout/users",
-        "/_layout/"
+        "/_dashboard/_auth"
       ]
     },
     "/login": {
       "filePath": "login.lazy.tsx"
     },
-    "/_layout/products": {
-      "filePath": "_layout/products.lazy.tsx",
-      "parent": "/_layout"
+    "/_dashboard/_auth": {
+      "filePath": "_dashboard/_auth.tsx",
+      "parent": "/_dashboard",
+      "children": [
+        "/_dashboard/_auth/products",
+        "/_dashboard/_auth/schedules",
+        "/_dashboard/_auth/settings",
+        "/_dashboard/_auth/users",
+        "/_dashboard/_auth/"
+      ]
     },
-    "/_layout/schedules": {
-      "filePath": "_layout/schedules.lazy.tsx",
-      "parent": "/_layout"
+    "/_dashboard/_auth/products": {
+      "filePath": "_dashboard/_auth.products.lazy.tsx",
+      "parent": "/_dashboard/_auth"
     },
-    "/_layout/settings": {
-      "filePath": "_layout/settings.lazy.tsx",
-      "parent": "/_layout"
+    "/_dashboard/_auth/schedules": {
+      "filePath": "_dashboard/_auth.schedules.lazy.tsx",
+      "parent": "/_dashboard/_auth"
     },
-    "/_layout/users": {
-      "filePath": "_layout/users.lazy.tsx",
-      "parent": "/_layout"
+    "/_dashboard/_auth/settings": {
+      "filePath": "_dashboard/_auth.settings.lazy.tsx",
+      "parent": "/_dashboard/_auth"
     },
-    "/_layout/": {
-      "filePath": "_layout/index.lazy.tsx",
-      "parent": "/_layout"
+    "/_dashboard/_auth/users": {
+      "filePath": "_dashboard/_auth.users.lazy.tsx",
+      "parent": "/_dashboard/_auth"
+    },
+    "/_dashboard/_auth/": {
+      "filePath": "_dashboard/_auth.index.lazy.tsx",
+      "parent": "/_dashboard/_auth"
     }
   }
 }

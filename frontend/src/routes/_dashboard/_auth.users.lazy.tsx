@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 
-export const Route = createLazyFileRoute('/_layout/users')({
+export const Route = createLazyFileRoute('/_dashboard/_auth/users')({
   component: Users
 })
 

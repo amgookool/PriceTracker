@@ -3,12 +3,12 @@
   "module": "server/index.ts",
   "type": "module",
   "scripts": {
-    "dev:backend": "bun --watch server/index.ts",
+    "dev:backend": "bun --watch index.ts",
     "dev:frontend": "cd frontend && bun run dev",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "build": "cd frontend && bun run build",
-    "start": "bun run server/index.ts"
+    "start": "bun run index.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.1.3",

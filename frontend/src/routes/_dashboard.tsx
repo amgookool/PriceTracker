@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import NavBar from '@/components/Navigation/NavBar'
-export const Route = createFileRoute('/_layout')({
+export const Route = createFileRoute('/_dashboard')({
   component: LayoutComponent
 })
 

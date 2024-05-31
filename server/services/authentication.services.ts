@@ -30,7 +30,13 @@ export const login = async (username: string, password: string) => {
     process.env.JWT_SECRET || "secret",
     "HS256"
   );
-  return token;
+  return {
+    token,
+    username: user.username,
+    email: user.email,
+    userId: user.user_id,
+    role: user.role,
+  };
 };
 
 export const verifyToken = async (token: string) => {
