@@ -8,10 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter, useNavigate } from "@tanstack/react-router";
 import { FaSearch, FaUserCircle } from "react-icons/fa";
-import ThemeToggler from "../ThemeToggler";
-import type { NavBarLink } from "./NavBar";
+import ThemeToggler from "@/components/ThemeToggler";
+import type { NavBarLink } from "@/components/Navigation/NavBar";
+import { useAuth } from "@/lib/utils";
+import {logoutUserApi} from "@/lib/api";
+
+
 
 export const RegularNavLinks = ({ navLinks }: { navLinks: NavBarLink[] }) => {
   return (
@@ -46,6 +50,9 @@ export const RegularNavLinks = ({ navLinks }: { navLinks: NavBarLink[] }) => {
 };
 
 const UserActionMenu = () => {
+  const authUser = useAuth();
+  const router = useRouter();
+  const navigate = useNavigate({ from: "/" });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -62,8 +69,11 @@ const UserActionMenu = () => {
         <DropdownMenuItem>
           <button
             className="w-full text-center"
-            onClick={(e) => {
-              console.log(e.currentTarget);
+            onClick={() => {
+              navigate({
+                to: "/settings",
+                from: router.basepath,
+              });
             }}
           >
             Settings
@@ -72,8 +82,13 @@ const UserActionMenu = () => {
         <DropdownMenuItem>
           <button
             className="w-full text-center"
-            onClick={(e) => {
-              console.log(e.currentTarget);
+            onClick={() => {
+              logoutUserApi();
+              authUser.logout();
+              navigate({
+                to: "/login",
+                from: router.basepath,
+              });
             }}
           >
             Logout

@@ -42,4 +42,12 @@ export const authenticationRoute = new Hono().post(
       });
     }
   }
+).post(
+  "/logout",
+  async (ctx) => {
+    deleteCookie(ctx, "access_token", {
+      path: "/",
+    });
+    return ctx.json({ message: "Logged out successfully" });
+  }
 );

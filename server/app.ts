@@ -39,7 +39,15 @@ app
       alg: "HS256",
       cookie: "access_token",
     })
-  );
+  )
+  .use(
+    "/api/auth/logout",
+    jwt({
+      secret: process.env.JWT_SECRET || "secret",
+      alg: "HS256",
+      cookie: "access_token",
+    })
+  )
 
 const apiRoutes = app
   .basePath("/api")

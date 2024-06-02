@@ -1,3 +1,4 @@
+
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/_dashboard/_auth/")({
@@ -7,7 +8,7 @@ export const Route = createLazyFileRoute("/_dashboard/_auth/")({
 function Index() {
   return (
     <>
-      <div className="flex min-h-screen w-full flex-col">
+      <div className="container">
         <Link to="/login">Go to Login</Link>
       </div>
     </>

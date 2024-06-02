@@ -1,18 +1,24 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import NavBreadCrumb from "@/components/Navigation/NavBreadCrumb";
 
 export const Route = createFileRoute("/_dashboard/_auth")({
-  beforeLoad: async ({ context, location }) => {
-    if (!context.isAuthenticated){
-      throw redirect({to: '/login', from: location.pathname})
+  component: Auth,
+  beforeLoad: ({ context }) => {
+    const authUser = localStorage.getItem("auth");
+    if (authUser) {
+      const user = JSON.parse(authUser);
+      context.login(user.username, user.userId);
+    } else {
+      throw redirect({ to: "/login" });
     }
   },
-  component: Auth,
 });
 
 function Auth() {
   return (
-    <>
+    <div className="container pt-4 space-y-5">
+      <NavBreadCrumb />
       <Outlet />
-    </>
+    </div>
   );
 }

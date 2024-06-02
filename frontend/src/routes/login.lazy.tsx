@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import api from "@/lib/api";
+import {loginUserApi} from "@/lib/api";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -25,45 +25,36 @@ import { useAuth } from "@/lib/utils";
 
 export const Route = createFileRoute("/login")({
   component: Login,
-  loader: async ({context}) => {
-    if (context.isAuthenticated){
-      throw redirect({
-        to: "/",
-        from: "/login",
-      })
+  loader: ({ context }) => {
+    const authUser = localStorage.getItem("auth");
+    if (authUser) {
+      const user = JSON.parse(authUser);
+      context.login(user.username, user.userId);
+      throw redirect({ to: "/" });
     }
   }
 });
 
-const loginUser = async (creds: { username: string; password: string }) => {
-  const response = await api.auth.login.$post({
-    json: creds,
-  });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    if (response.status === 401) {
-      throw new Error("Invalid username or password");
-    } else throw new Error("An error occurred");
-  }
-};
+
 
 function Login() {
   const navigate = useNavigate({ from: "/login" });
-  const authUser = useAuth();
   const router = useRouter();
+  const authUser = useAuth();
   const mutation = useMutation({
-    mutationFn: loginUser,
+    mutationFn: loginUserApi,
     onSuccess: (res) => {
       toast.success("Logged in successfully");
-      authUser.accessToken = res.token;
-      authUser.login(res.username,res.userId);
-      router.update({
-        context: authUser,
-      });
-
+      authUser.login(res.username, res.userId);
+      authUser.isAuthenticated = true;
+      localStorage.setItem("auth", JSON.stringify({username:res.username, userId: res.userId}));
       navigate({
         to: "/",
+        from: "/login",
+        replace: true,
+      });
+      router.update({
+        context: authUser,
       });
     },
     onError: (error) => {
