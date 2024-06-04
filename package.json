@@ -15,15 +15,15 @@
     "drizzle-kit": "^0.21.4"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@hono/zod-validator": "^0.2.1",
+    "@hono/zod-validator": "^0.2.2",
     "axios": "^1.7.2",
     "cheerio": "^1.0.0-rc.12",
     "drizzle-orm": "^0.30.10",
     "drizzle-zod": "^0.5.1",
-    "hono": "^4.4.0",
+    "hono": "^4.4.3",
     "zod": "^3.23.8"
   },
   "trustedDependencies": [
