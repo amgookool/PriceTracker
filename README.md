@@ -17,6 +17,7 @@ The PriceTracker application requires environment variables in order for the app
 - **PORT**: The port of the server.
 - **DATABASE**: The connection string of the SQL database.
 - **ADMIN_USERNAME**: The username of the user that will be migrated on first launch
+- **ADMIN_EMAIL**: The email of the user that will be migrated on first launch
 - **ADMIN_PASSWORD**: The password of the user that will be migrated on first launch
 - **JWT_SECRET**: The secret key for JWT tokens
 - **JWT_EXPIRE_MINS**: The expire time for jwt access tokens
