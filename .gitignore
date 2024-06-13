@@ -144,3 +144,6 @@ dist
 
 # Drizzle migration folder (Ignore since db is sqlite)
 # .drizzle
+
+# VSCode Settings
+.vscode/settings.json
