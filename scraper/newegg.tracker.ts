@@ -1,7 +1,7 @@
 import axios, {
-    type AxiosProxyConfig,
-    type AxiosRequestConfig,
-    type RawAxiosRequestHeaders,
+  // type AxiosProxyConfig,
+  type AxiosRequestConfig,
+  type RawAxiosRequestHeaders,
 } from "axios";
 import * as cheerio from "cheerio";
 import { getRandomUserAgent } from "./configs.tracker";
@@ -36,17 +36,16 @@ const scrapeProduct = async (html: string) => {
   const productTitle = $("h1.product-title").text();
   const imageElements = $("img.product-view-img-original");
   const imageLink = imageElements.attr("src") as string;
-  
-  // const imageWrapper = $("div#imgTagWrapperId");
-  // const priceWrapper = $("div#corePrice_feature_div");
-  // const imageLink = imageWrapper.find("img").attr("src") as string;
-  // const price = parseFloat(
-  //   priceWrapper.find("span.a-offscreen").text().slice(1)
-  // );
+  const priceWrapper = $("div.product-price");
+
+  const priceElement = priceWrapper.find("li.price-current"); // Find all 'li.price-current' elements
+  const priceText = priceElement.text().replace("$", "");
+  const price = parseFloat(priceText);
+
   return {
     productTitle,
     imageLink,
-  //   price,
+    price,
   };
 };
 
@@ -54,19 +53,3 @@ export const scrapeNeweggProduct = async (url: string) => {
   const html = (await getNeweggProductPage(url)) as string;
   return await scrapeProduct(html);
 };
-
-
-const newEggUrl = "https://www.newegg.com/amd-ryzen-5-7600x-ryzen-5-7000-series/p/N82E16819113770";
-const newEggFile = "newegg.html";
-
-const htmlFile = Bun.file(newEggFile)
-const htmlString = await htmlFile.text();
-scrapeProduct(htmlString);
-
-
-const main = async () => {
-  const html = await getNeweggProductPage(newEggUrl);
-  console.log(html);
-};
-
-// main();
