@@ -63,8 +63,8 @@ function Products() {
   const form = useForm({
     defaultValues: {
       user_id: parseInt(user_id),
-      // name: "",
-      // website: "",
+      name: "",
+      website: "",
       // product_url: "",
       // description: "" || null,
       // desired_price: "" || null,
@@ -118,7 +118,9 @@ function Products() {
                           id={field.name}
                           name={field.name}
                           value={field.state.value}
-                          onChange={(e) => field.handleChange(parseInt(e.target.value))}
+                          onChange={(e) =>
+                            field.handleChange(parseInt(e.target.value))
+                          }
                           onBlur={field.handleBlur}
                           type="number"
                           hidden={true}
@@ -138,23 +140,12 @@ function Products() {
                   }}
                 />
 
-                {/* <div className="grid grid-cols-2 gap-2">
-                  <div className="w-full">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="w-full text-start">
                     <form.Field
                       name="name"
                       validators={{
-                        onChange: z.string().min(1, "*Name is required"),
-                        onChangeAsync: z.string().refine(
-                          async (value) => {
-                            await new Promise((resolve) =>
-                              setTimeout(resolve, 1000)
-                            );
-                            return !value.includes("error");
-                          },
-                          {
-                            message: "No 'error' allowed in name",
-                          }
-                        ),
+                        onChange: z.string().min(1, "*Name is required").trim(),
                       }}
                       children={(field) => {
                         return (
@@ -187,11 +178,11 @@ function Products() {
                     />
                   </div>
 
-                  <div className="w-full">
+                  <div className="w-full text-start">
                     <form.Field
                       name="website"
                       validators={{
-                        onChange: z.string(),
+                        onChange: z.enum(["AMAZON", "NEWEGG"]),
                       }}
                       children={(field) => {
                         return (
@@ -236,7 +227,7 @@ function Products() {
                   </div>
                 </div>
 
-                <div className="grid gap-2">
+                {/* <div className="grid gap-2">
                   <form.Field
                     name="desired_price"
                     validators={{
@@ -462,7 +453,7 @@ function Products() {
                       Cancel
                     </Button>
                   </DialogClose>
-                  <Button variant={"default"} type="button">
+                  <Button variant={"default"} type="submit">
                     Add
                   </Button>
                 </div>
