@@ -4,7 +4,6 @@ import { AuthProvider, type AuthContextType } from "@/lib/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
-import { CookiesProvider } from "react-cookie";
 import ReactDOM from "react-dom/client";
 // Import the generated route tree
 import { useAuth } from "@/lib/utils";
@@ -41,13 +40,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <CookiesProvider defaultSetOptions={{ path: "/" }}>
         <ThemeProvider defaultTheme="dark" storageKey="tracker-ui-theme">
           <AuthProvider>
             <App />
           </AuthProvider>
         </ThemeProvider>
-      </CookiesProvider>
     </StrictMode>
   );
 }

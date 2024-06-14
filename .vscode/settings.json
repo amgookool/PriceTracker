@@ -8,7 +8,7 @@
     "**/Thumbs.db": true,
     "**/node_modules": true,
     "**/frontend/dist": true,
-    "**/frontend": true,
+    "**/frontend": false,
     "**/server": false,
     "**/rest": false,
     "**/scheduler": false,
