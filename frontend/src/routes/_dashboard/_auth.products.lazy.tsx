@@ -1,15 +1,13 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { addProductApi, getAllUsersProductsApi } from "@/lib/api";
-import { queryOptions, useQuery } from "@tanstack/react-query";
-import { createLazyFileRoute } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -19,18 +17,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addProductApi, getAllUsersProductsApi } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { queryOptions, useQuery } from "@tanstack/react-query";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { FaPlus } from "react-icons/fa";
 // import ProductCard from "@/components/ProductCard";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import { z } from "zod";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export const Route = createLazyFileRoute("/_dashboard/_auth/products")({
   component: Products,
 });
+
+const freq_types = ["seconds", "days", "hours", "minutes"];
+const freq_ints = Array.from({ length: 60 }, (_, i) => i + 1);
 
 function Products() {
   const getAllUsersProductsQueryOpts = queryOptions({
@@ -58,12 +62,14 @@ function Products() {
 
   const form = useForm({
     defaultValues: {
-      name: "",
-      desired_price: parseFloat("1.05"),
-      product_url: "",
-      website: "",
       user_id: parseInt(user_id),
-      description: "",
+      name: "",
+      website: "",
+      product_url: "",
+      description: "" || null,
+      desired_price: "" || null,
+      scrape_frequency_int: "",
+      scrape_frequency_type: "",
     },
     onSubmit: async ({ value }) => {
       console.log(value);
@@ -103,50 +109,130 @@ function Products() {
                   form.handleSubmit();
                 }}
               >
-                <div className="grid gap-2">
-                  <form.Field
-                    name="name"
-                    validators={{
-                      onChange: z.string().min(1, "*Name is required"),
-                      onChangeAsync: z.string().refine(
-                        async (value) => {
-                          await new Promise((resolve) =>
-                            setTimeout(resolve, 1000)
-                          );
-                          return !value.includes("error");
-                        },
-                        {
-                          message: "No 'error' allowed in name",
-                        }
-                      ),
-                    }}
-                    children={(field) => {
-                      return (
-                        <>
-                          <Label htmlFor={field.name}>Name</Label>
-                          <Input
-                            id={field.name}
-                            name={field.name}
-                            value={field.state.value}
-                            onBlur={field.handleBlur}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            type="text"
-                            placeholder="Enter the name of the product to track"
-                          />
-                          {field.state.meta.errors &&
-                          field.state.meta.errors.length > 0 ? (
-                            <span className="flex text-xs text-red-600">
-                              {field.state.meta.errors.map((error, index) => (
-                                <em key={index} role="alert">
-                                  <span key={index}>{error}</span>
-                                </em>
-                              ))}
-                            </span>
-                          ) : null}
-                        </>
-                      );
-                    }}
-                  />
+                <form.Field
+                  name="user_id"
+                  children={(field) => {
+                    return (
+                      <>
+                        <input
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          type="number"
+                          hidden={true}
+                        />
+                        {field.state.meta.errors &&
+                        field.state.meta.errors.length > 0 ? (
+                          <span className="flex text-xs text-red-600">
+                            {field.state.meta.errors.map((error, index) => (
+                              <em key={index} role="alert">
+                                <span key={index}>{error}</span>
+                              </em>
+                            ))}
+                          </span>
+                        ) : null}
+                      </>
+                    );
+                  }}
+                />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="w-full">
+                    <form.Field
+                      name="name"
+                      validators={{
+                        onChange: z.string().min(1, "*Name is required"),
+                        onChangeAsync: z.string().refine(
+                          async (value) => {
+                            await new Promise((resolve) =>
+                              setTimeout(resolve, 1000)
+                            );
+                            return !value.includes("error");
+                          },
+                          {
+                            message: "No 'error' allowed in name",
+                          }
+                        ),
+                      }}
+                      children={(field) => {
+                        return (
+                          <>
+                            <Label htmlFor={field.name}>Name</Label>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              type="text"
+                              placeholder="Enter name of product."
+                            />
+                            {field.state.meta.errors &&
+                            field.state.meta.errors.length > 0 ? (
+                              <span className="flex text-xs text-red-600">
+                                {field.state.meta.errors.map((error, index) => (
+                                  <em key={index} role="alert">
+                                    <span key={index}>{error}</span>
+                                  </em>
+                                ))}
+                              </span>
+                            ) : null}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <form.Field
+                      name="website"
+                      validators={{
+                        onChange: z.string(),
+                      }}
+                      children={(field) => {
+                        return (
+                          <>
+                            <Label htmlFor={field.name}>Website</Label>
+                            <Select
+                              onValueChange={(value) => {
+                                field.handleChange(value);
+                              }}
+                            >
+                              <SelectTrigger id={field.name}>
+                                <SelectValue placeholder="Select Website" />
+                              </SelectTrigger>
+                              <SelectContent
+                                onChange={() => {
+                                  return;
+                                }}
+                                position="popper"
+                              >
+                                <SelectItem value={"AMAZON" as const}>
+                                  Amazon
+                                </SelectItem>
+                                <SelectItem value={"NEWEGG" as const}>
+                                  NewEgg
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {field.state.meta.errors &&
+                            field.state.meta.errors.length > 0 ? (
+                              <span className="flex text-xs text-red-600">
+                                {field.state.meta.errors.map((error, index) => (
+                                  <em key={index} role="alert">
+                                    <span key={index}>{error}</span>
+                                  </em>
+                                ))}
+                              </span>
+                            ) : null}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div className="grid gap-2">
@@ -212,7 +298,7 @@ function Products() {
                   />
                 </div>
 
-                <div className="grid gap-2">
+                <div className="grid gap-2 pt-1">
                   <form.Field
                     name="product_url"
                     validators={{
@@ -249,81 +335,6 @@ function Products() {
                             type="text"
                             placeholder="Enter the name of the product to track"
                           />
-                          {field.state.meta.errors &&
-                          field.state.meta.errors.length > 0 ? (
-                            <span className="flex text-xs text-red-600">
-                              {field.state.meta.errors.map((error, index) => (
-                                <em key={index} role="alert">
-                                  <span key={index}>{error}</span>
-                                </em>
-                              ))}
-                            </span>
-                          ) : null}
-                        </>
-                      );
-                    }}
-                  />
-                </div>
-                <form.Field
-                  name="user_id"
-                  children={(field) => {
-                    return (
-                      <>
-                        <input
-                          id={field.name}
-                          name={field.name}
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          type="text"
-                          hidden={true}
-                          placeholder="Enter the desired price of the product."
-                        />
-                        {field.state.meta.errors &&
-                        field.state.meta.errors.length > 0 ? (
-                          <span className="flex text-xs text-red-600">
-                            {field.state.meta.errors.map((error, index) => (
-                              <em key={index} role="alert">
-                                <span key={index}>{error}</span>
-                              </em>
-                            ))}
-                          </span>
-                        ) : null}
-                      </>
-                    );
-                  }}
-                />
-                <div className="grid gap-2">
-                  <form.Field
-                    name="website"
-                    validators={{
-                      onChange: z.string(),
-                    }}
-                    children={(field) => {
-                      return (
-                        <>
-                          <Label htmlFor={field.name}>Website</Label>
-                          <Select
-                            onValueChange={(value) => {
-                              field.handleChange(value);
-                            }}
-                          >
-                            <SelectTrigger id={field.name}>
-                              <SelectValue placeholder="Select Website" />
-                            </SelectTrigger>
-                            <SelectContent
-                              onChange={() => {
-                                return;
-                              }}
-                              position="popper"
-                            >
-                              <SelectItem value={"AMAZON" as const}>
-                                Amazon
-                              </SelectItem>
-                              <SelectItem value={"NEWEGG" as const}>
-                                NewEgg
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
                           {field.state.meta.errors &&
                           field.state.meta.errors.length > 0 ? (
                             <span className="flex text-xs text-red-600">
@@ -385,30 +396,71 @@ function Products() {
                     }}
                   />
                 </div>
-                {/* <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">Framework</Label>
-              <Select>
-                <SelectTrigger id="framework">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="next">Next.js</SelectItem>
-                  <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                  <SelectItem value="astro">Astro</SelectItem>
-                  <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div> */}
+
+                <div className="flex items-center gap-2">
+                  <span>Scrape every</span>
+                  <form.Field
+                    name="scrape_frequency_int"
+                    validators={{ onChange: z.number() }}
+                    children={(field) => (
+                      <>
+                        <Select
+                          onValueChange={(value) => {
+                            field.handleChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-36" id={field.name}>
+                            <SelectValue placeholder="Select Frequency" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            {freq_ints.map((freq_int, idx) => (
+                              <SelectItem key={idx} value={freq_int.toString()}>
+                                {freq_int}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
+                  />
+                  <form.Field
+                    name="scrape_frequency_type"
+                    validators={{ onChange: z.string() }}
+                    children={(field) => (
+                      <>
+                        <Select
+                          onValueChange={(value) => {
+                            field.handleChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-36" id={field.name}>
+                            <SelectValue placeholder="Select Frequency" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            {freq_types.map((freq_type, idx) => (
+                              <SelectItem key={idx} value={freq_type}>
+                                {freq_type}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
+                  />
+                </div>
+
                 <div className="flex gap-2 place-content-end">
-                  <Button variant={"secondary"} type="button">
-                    Cancel
-                  </Button>
+                  <DialogClose asChild>
+                    <Button
+                      variant={"secondary"}
+                      type="button"
+                      onClick={() => {
+                        form.reset();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </DialogClose>
                   <Button variant={"default"} type="button">
                     Add
                   </Button>
@@ -439,172 +491,3 @@ function Products() {
     </>
   );
 }
-
-// function AddProductModal() {
-//   const user_id = JSON.parse(localStorage.getItem("auth") || "").userId;
-//   const mutation = useMutation({
-//     mutationFn: addProductApi,
-//     onSuccess: (res) => {
-//       console.log(res);
-//       toast.success("Logged in successfully");
-//     },
-//     onError: (error) => {
-//       console.error("An error occurred: ", error.message);
-//       toast.error(error.message || "An error occurred");
-//     },
-//   });
-
-//   const form = useForm({
-//     defaultValues: {
-//       name: "",
-//       desired_price: parseInt("0.00"),
-//       product_url: "",
-//       website: ("AMAZON" as const) || ("NEWEGG" as const),
-//       user_id: parseInt(user_id),
-//       description: "",
-//     },
-//     onSubmit: async ({ value }) => {
-//       mutation.mutate(value);
-//     },
-//     validatorAdapter: zodValidator,
-//   });
-
-//   return (
-//     <>
-//       <DialogContent>
-//         <DialogHeader>
-//           <DialogTitle>Add Product</DialogTitle>
-//           <DialogDescription>
-//             Fill in the details below to add a new product to track.
-//           </DialogDescription>
-//           <form
-//             className="space-y-2"
-//             onSubmit={(e) => {
-//               e.preventDefault();
-//               e.stopPropagation();
-//               form.handleSubmit();
-
-//             }}
-//           >
-//             <div className="grid gap-2">
-//               <form.Field
-//                 name="name"
-//                 validators={{
-//                   onChange: z.string().min(1, "*Name is required"),
-//                   onChangeAsync: z.string().refine(
-//                     async (value) => {
-//                       await new Promise((resolve) => setTimeout(resolve, 1000));
-//                       return !value.includes("error");
-//                     },
-//                     {
-//                       message: "No 'error' allowed in name",
-//                     }
-//                   ),
-//                 }}
-//                 children={(field) => {
-//                   return (
-//                     <>
-//                       <Label htmlFor={field.name}>Name</Label>
-//                       <Input
-//                         id={field.name}
-//                         name={field.name}
-//                         value={field.state.value}
-//                         onBlur={field.handleBlur}
-//                         onChange={(e) => field.handleChange(e.target.value)}
-//                         type="text"
-//                         placeholder="Enter the name of the product to track"
-//                       />
-//                       {field.state.meta.errors &&
-//                       field.state.meta.errors.length > 0 ? (
-//                         <span className="flex text-xs text-red-600">
-//                           {field.state.meta.errors.map((error, index) => (
-//                             <em key={index} role="alert">
-//                               <span key={index}>{error}</span>
-//                             </em>
-//                           ))}
-//                         </span>
-//                       ) : null}
-//                     </>
-//                   );
-//                 }}
-//               />
-//             </div>
-
-//             {/* <div className="grid gap-2">
-//               <form.Field
-//                 name="desired_price"
-//                 validators={{
-//                   onChange: z
-//                     .number({
-//                       required_error: "*Desired Price is required",
-//                       invalid_type_error: "*Desired Price must be a number",
-//                     })
-//                     .multipleOf(0.01),
-//                   onChangeAsync: z.number().refine(
-//                     async (value) => {
-//                       await new Promise((resolve) => setTimeout(resolve, 1000));
-//                       return !value.toString().includes("error");
-//                     },
-//                     {
-//                       message: "No 'error' allowed in desired_price",
-//                     }
-//                   ),
-//                 }}
-//                 children={(field) => {
-//                   return (
-//                     <>
-//                       <Label htmlFor={field.name}>Desired Price</Label>
-//                       <Input
-//                         id={field.name}
-//                         name={field.name}
-//                         value={field.state.value}
-//                         onBlur={field.handleBlur}
-//                         onChange={(e) => {
-//                           const desired_price = parseFloat(e.target.value);
-//                           field.handleChange(desired_price);
-//                         }}
-//                         type="number"
-//                         placeholder="Enter the name of the product to track"
-//                       />
-//                       {field.state.meta.errors &&
-//                       field.state.meta.errors.length > 0 ? (
-//                         <span className="flex text-xs text-red-600">
-//                           {field.state.meta.errors.map((error, index) => (
-//                             <em key={index} role="alert">
-//                               <span key={index}>{error}</span>
-//                             </em>
-//                           ))}
-//                         </span>
-//                       ) : null}
-//                     </>
-//                   );
-//                 }}
-//               />
-//             </div> */}
-
-//             {/* <div className="grid w-full items-center gap-4">
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="name">Name</Label>
-//               <Input id="name" placeholder="Name of your project" />
-//             </div>
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="framework">Framework</Label>
-//               <Select>
-//                 <SelectTrigger id="framework">
-//                   <SelectValue placeholder="Select" />
-//                 </SelectTrigger>
-//                 <SelectContent position="popper">
-//                   <SelectItem value="next">Next.js</SelectItem>
-//                   <SelectItem value="sveltekit">SvelteKit</SelectItem>
-//                   <SelectItem value="astro">Astro</SelectItem>
-//                   <SelectItem value="nuxt">Nuxt.js</SelectItem>
-//                 </SelectContent>
-//               </Select>
-//             </div>
-//           </div> */}
-//           </form>
-//         </DialogHeader>
-//       </DialogContent>
-//     </>
-//   );
-// }
