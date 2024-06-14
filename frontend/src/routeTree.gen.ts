@@ -13,12 +13,12 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as DashboardAuthImport } from './routes/_dashboard/_auth'
 
 // Create Virtual Routes
 
-const LoginLazyImport = createFileRoute('/login')()
 const DashboardAuthIndexLazyImport = createFileRoute('/_dashboard/_auth/')()
 const DashboardAuthUsersLazyImport = createFileRoute(
   '/_dashboard/_auth/users',
@@ -35,10 +35,10 @@ const DashboardAuthProductsLazyImport = createFileRoute(
 
 // Create/Update Routes
 
-const LoginLazyRoute = LoginLazyImport.update({
+const LoginRoute = LoginImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+} as any)
 
 const DashboardRoute = DashboardImport.update({
   id: '/_dashboard',
@@ -102,7 +102,7 @@ declare module '@tanstack/react-router' {
       id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginLazyImport
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/_dashboard/_auth': {
@@ -162,7 +162,7 @@ export const routeTree = rootRoute.addChildren({
       DashboardAuthIndexLazyRoute,
     }),
   }),
-  LoginLazyRoute,
+  LoginRoute,
 })
 
 /* prettier-ignore-end */
@@ -184,7 +184,7 @@ export const routeTree = rootRoute.addChildren({
       ]
     },
     "/login": {
-      "filePath": "login.lazy.tsx"
+      "filePath": "login.tsx"
     },
     "/_dashboard/_auth": {
       "filePath": "_dashboard/_auth.tsx",
