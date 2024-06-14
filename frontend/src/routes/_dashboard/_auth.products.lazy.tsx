@@ -63,13 +63,13 @@ function Products() {
   const form = useForm({
     defaultValues: {
       user_id: parseInt(user_id),
-      name: "",
-      website: "",
-      product_url: "",
-      description: "" || null,
-      desired_price: "" || null,
-      scrape_frequency_int: "",
-      scrape_frequency_type: "",
+      // name: "",
+      // website: "",
+      // product_url: "",
+      // description: "" || null,
+      // desired_price: "" || null,
+      // scrape_frequency_int: "",
+      // scrape_frequency_type: "",
     },
     onSubmit: async ({ value }) => {
       console.log(value);
@@ -118,6 +118,7 @@ function Products() {
                           id={field.name}
                           name={field.name}
                           value={field.state.value}
+                          onChange={(e) => field.handleChange(parseInt(e.target.value))}
                           onBlur={field.handleBlur}
                           type="number"
                           hidden={true}
@@ -137,7 +138,7 @@ function Products() {
                   }}
                 />
 
-                <div className="grid grid-cols-2 gap-2">
+                {/* <div className="grid grid-cols-2 gap-2">
                   <div className="w-full">
                     <form.Field
                       name="name"
@@ -447,7 +448,7 @@ function Products() {
                       </>
                     )}
                   />
-                </div>
+                </div> */}
 
                 <div className="flex gap-2 place-content-end">
                   <DialogClose asChild>
