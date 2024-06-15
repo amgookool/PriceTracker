@@ -18,7 +18,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-form": "^0.20.3",
     "@tanstack/react-query": "^5.45.0",
-    "@tanstack/react-router": "^1.36.3",
+    "@tanstack/react-router": "^1.38.1",
     "@tanstack/react-table": "^8.17.3",
     "@tanstack/zod-form-adapter": "^0.20.3",
     "class-variance-authority": "^0.7.0",
@@ -34,7 +34,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@tanstack/router-devtools": "^1.36.3",
+    "@tanstack/router-devtools": "^1.38.1",
     "@tanstack/router-vite-plugin": "^1.38.0",
     "@types/bun": "^1.1.4",
     "@types/react": "^18.3.3",
