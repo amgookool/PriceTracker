@@ -1,86 +1,35 @@
 {
-  "files.exclude": {
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
-    "**/.DS_Store": true,
-    "**/Thumbs.db": true,
-    "**/node_modules": true,
-    "**/frontend/dist": true,
-    "**/frontend": false,
-    "**/server": false,
-    "**/rest": false,
-    "**/scheduler": false,
-    "**/scraper": false,
-    "**/.drizzle": false
-  },
-  "terminal.integrated.cwd": "${workspaceFolder}",
-  "rest-client.environmentVariables": {
-    "$shared": {
-      "baseUrl": "http://localhost:2500/api"
-    }
-  },
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
-  "rest-client.previewOption": "full",
-  "rest-client.previewColumn": "beside",
-  "rest-client.logLevel": "verbose",
-  "rest-client.fontSize": 18,
-  "rest-client.fontWeight": "bold",
-  "rest-client.fontFamily": "Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace, 'Droid Sans Fallback'",
-  "sqltools.useNodeRuntime": true,
-  "sqltools.connections": [
-    {
-      "previewLimit": 50,
-      "server": "192.168.33.58",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "Mondeum-UK",
-      "group": "Test-Server",
-      "database": "mondeum-uk",
-      "username": "monduser",
-      "password": "pass1234"
-    },
-    {
-      "previewLimit": 50,
-      "server": "192.168.33.58",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "Mondeum-KY",
-      "group": "Test-Server",
-      "database": "mondeum-ky",
-      "username": "monduser",
-      "password": "pass1234"
-    },
-    {
-      "previewLimit": 50,
-      "server": "192.168.33.58",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "Mondeum-TT",
-      "group": "Test-Server",
-      "database": "mondeum-tt",
-      "username": "monduser",
-      "password": "pass1234"
-    },
-    {
-      "previewLimit": 50,
-      "server": "192.168.33.58",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "Mondeum-US",
-      "group": "Test-Server",
-      "database": "mondeum-us",
-      "username": "monduser",
-      "password": "pass1234"
-    },
-    {
-      "previewLimit": 50,
-      "driver": "SQLite",
-      "name": "PriceTracker",
-      "database": "./pricetracker.sqlite"
-    }
-  ]
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": true,
+		"**/node_modules": true,
+		"**/frontend/dist": true,
+		"**/frontend": false,
+		"**/server": false,
+		"**/rest": false,
+		"**/scheduler": false,
+		"**/scraper": false,
+		"**/.drizzle": false
+	},
+	"terminal.integrated.cwd": "${workspaceFolder}",
+	"rest-client.environmentVariables": {
+		"$shared": {
+			"baseUrl": "http://localhost:2500/api"
+		}
+	},
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"driver": "SQLite",
+			"name": "PriceTracker",
+			"database": "./pricetracker.sqlite"
+		}
+	]
 }
