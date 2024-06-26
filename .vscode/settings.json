@@ -32,5 +32,6 @@
 			"name": "PriceTracker",
 			"database": "./pricetracker.sqlite"
 		}
-	]
+	],
+	"sqltools.useNodeRuntime": true
 }
