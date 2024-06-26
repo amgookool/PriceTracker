@@ -1,12 +1,9 @@
-import { createFileRoute, Outlet, useNavigate, redirect } from '@tanstack/react-router'
-import NavBar from '@/components/Navigation/NavBar'
-import { useAuth } from "@/lib/utils";
+import NavBar from "@/components/Navigation/NavBar";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
-
-
-export const Route = createFileRoute('/_dashboard')({
-  component: LayoutComponent
-})
+export const Route = createFileRoute("/_dashboard")({
+  component: LayoutComponent,
+});
 
 function LayoutComponent() {
   return (
@@ -14,5 +11,5 @@ function LayoutComponent() {
       <NavBar />
       <Outlet />
     </div>
-  )
+  );
 }
