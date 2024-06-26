@@ -70,7 +70,7 @@ function Products() {
       product_url: "",
       desired_price: 0.99,
       description: null || "",
-      scrape_frequency_int: "",
+      scrape_frequency_int: parseInt("1"),
       scrape_frequency_type: "",
       is_favorite: false,
     },
@@ -367,57 +367,98 @@ function Products() {
                   <span>Scrape every</span>
                   <form.Field
                     name="scrape_frequency_int"
-                    validators={{ onChange: z.number().positive().finite() }}
-                    children={(field) => (
-                      <>
-                        <Select
-                          onValueChange={(value) => {
-                            field.handleChange(value);
-                          }}
-                        >
-                          <SelectTrigger
-                            className={cn("w-[170px]")}
-                            id={field.name}
+                    validators={{
+                      onChange: z.number().gte(1),
+                    }}
+                    children={(field) => {
+                      return (
+                        <>
+                          <Select
+                            onValueChange={(value) => {
+                              field.handleChange(parseInt(value));
+                            }}
                           >
-                            <SelectValue placeholder="Scrape frequency" />
-                          </SelectTrigger>
-                          <SelectContent position="popper">
-                            {freq_ints.map((freq_int, idx) => (
-                              <SelectItem key={idx} value={freq_int.toString()}>
-                                {freq_int}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </>
-                    )}
+                            <SelectTrigger
+                              className={cn("w-[170px]")}
+                              id={field.name}
+                            >
+                              <SelectValue placeholder="Frequency" />
+                            </SelectTrigger>
+                            <SelectContent
+                              onChange={() => {
+                                return;
+                              }}
+                              position="popper"
+                            >
+                              {freq_ints.map((freq_int, idx) => (
+                                <SelectItem
+                                  key={idx}
+                                  value={freq_int.toString()}
+                                >
+                                  {freq_int}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {field.state.meta.errors &&
+                          field.state.meta.errors.length > 0 ? (
+                            <span className="flex text-xs text-red-600">
+                              {field.state.meta.errors.map((error, index) => (
+                                <em key={index} role="alert">
+                                  <span key={index}>{error}</span>
+                                </em>
+                              ))}
+                            </span>
+                          ) : null}
+                        </>
+                      );
+                    }}
                   />
                   <form.Field
                     name="scrape_frequency_type"
-                    validators={{ onChange: z.enum(freq_types) }}
-                    children={(field) => (
-                      <>
-                        <Select
-                          onValueChange={(value) => {
-                            field.handleChange(value);
-                          }}
-                        >
-                          <SelectTrigger
-                            className={cn("w-[160px]")}
-                            id={field.name}
+                    validators={{
+                      onChange: z.enum(freq_types),
+                    }}
+                    children={(field) => {
+                      return (
+                        <>
+                          <Select
+                            onValueChange={(value) => {
+                              field.handleChange(value);
+                            }}
                           >
-                            <SelectValue placeholder="Select Period" />
-                          </SelectTrigger>
-                          <SelectContent position="popper">
-                            {freq_types.map((freq_type, idx) => (
-                              <SelectItem key={idx} value={freq_type}>
-                                {freq_type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </>
-                    )}
+                            <SelectTrigger
+                              className={cn("w-[170px]")}
+                              id={field.name}
+                            >
+                              <SelectValue placeholder="Period" />
+                            </SelectTrigger>
+                            <SelectContent
+                              onChange={() => {
+                                return;
+                              }}
+                              position="popper"
+                            >
+                              {freq_types.map((freq_type, idx) => (
+                                <SelectItem key={idx} value={freq_type}>
+                                  {freq_type}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {field.state.meta.errors &&
+                          field.state.meta.errors.length > 0 ? (
+                            <span className="flex text-xs text-red-600">
+                              {field.state.meta.errors.map((error, index) => (
+                                <em key={index} role="alert">
+                                  <span key={index}>{error}</span>
+                                </em>
+                              ))}
+                            </span>
+                          ) : null}
+                        </>
+                      );
+                    }}
                   />
                 </div>
 
