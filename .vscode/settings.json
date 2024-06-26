@@ -13,7 +13,8 @@
 		"**/rest": false,
 		"**/scheduler": false,
 		"**/scraper": false,
-		"**/.drizzle": false
+		"**/.drizzle": false,
+		"**/.devcontainer": true
 	},
 	"terminal.integrated.cwd": "${workspaceFolder}",
 	"rest-client.environmentVariables": {
