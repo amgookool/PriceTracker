@@ -19,7 +19,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { FaPlus } from 'react-icons/fa';
 // import ProductCard from "@/components/ProductCard";
-import type { createProductModelType } from '@Types/product.types';
+import type { addNewProductType } from '@/lib/api';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { zodValidator } from '@tanstack/zod-form-adapter';
@@ -93,7 +93,7 @@ function AddProductForm({ userId }: AddProductFormProps) {
 		mutationFn: addProductApi,
 		onSuccess: (res) => {
 			console.log(res);
-			toast.success('Seccessfully added product');
+			toast.success(`Successfully added product:`);
 		},
 		onError: (error) => {
 			console.error('An error occurred: ', error.message);
@@ -113,7 +113,6 @@ function AddProductForm({ userId }: AddProductFormProps) {
 			is_favorite: false,
 		},
 		onSubmit: async ({ value }) => {
-			console.log(value);
 			const postData = {
 				user_id: value.user_id,
 				name: value.name,
@@ -121,7 +120,9 @@ function AddProductForm({ userId }: AddProductFormProps) {
 				product_url: value.product_url,
 				desired_price: value.desired_price,
 				description: value.description ?? null,
-			} as createProductModelType;
+				is_favorite: value.is_favorite,
+				scrape_interval: `${value.scrape_frequency_int} ${value.scrape_frequency_type}`,
+			} as addNewProductType;
 			mutation.mutate(postData);
 		},
 		validatorAdapter: zodValidator,
