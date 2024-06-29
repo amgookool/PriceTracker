@@ -36,14 +36,20 @@ export const login = async (username: string, password: string) => {
 };
 
 export const verifyToken = async (token: string) => {
-	const decodedPayload = await verify(token, process.env.JWT_SECRET || 'secret', 'HS256');
-	return decodedPayload as {
-		userId: number;
-		username: string;
-		email: string;
-		role: string;
-		exp: number;
-	};
+	try {
+		const decodedPayload = await verify(token, process.env.JWT_SECRET || 'secret', 'HS256');
+
+		return decodedPayload as {
+			userId: number;
+			username: string;
+			email: string;
+			role: string;
+			exp: number;
+		};
+	} catch (e) {
+		const error = e as Error;
+		throw new Error(error.message);
+	}
 };
 
 export const decodeToken = async (token: string) => {

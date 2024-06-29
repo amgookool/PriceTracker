@@ -3,8 +3,16 @@ import { UserService } from '@server/services';
 import { createUpdateUserModel, createUserModel } from '@server/types';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-
+import { jwt } from 'hono/jwt';
 export const usersRoute = new Hono()
+	.use(
+		'*',
+		jwt({
+			secret: process.env.JWT_SECRET ?? 'secret',
+			alg: 'HS256',
+			cookie: 'access_token',
+		}),
+	)
 	.get('/', async (ctx) => {
 		try {
 			const result = await UserService.getUsers();

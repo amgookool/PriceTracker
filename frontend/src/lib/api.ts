@@ -1,7 +1,7 @@
 import type { ApiRoutes } from '@server/app';
+import { createProductModel } from '@server/types';
 import { hc } from 'hono/client';
 import { z } from 'zod';
-import { createProductModel } from '../../../types/productTypes';
 
 const apiClient = hc<ApiRoutes>('/');
 

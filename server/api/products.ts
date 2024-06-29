@@ -4,8 +4,17 @@ import { ProductService } from '@server/services';
 import { createProductModel } from '@server/types';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
+import { jwt } from 'hono/jwt';
 
 export const productsRoute = new Hono()
+	.use(
+		'*',
+		jwt({
+			secret: process.env.JWT_SECRET ?? 'secret',
+			alg: 'HS256',
+			cookie: 'access_token',
+		}),
+	)
 	.get('/', async (ctx) => {
 		const payload = ctx.get('jwtPayload');
 		console.log(payload);
