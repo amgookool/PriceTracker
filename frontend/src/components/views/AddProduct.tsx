@@ -13,12 +13,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { addProductApi } from '@/lib/api';
+import { ProductsApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useNavigate } from '@tanstack/react-router';
 import { FaPlus } from 'react-icons/fa';
 // import ProductCard from "@/components/ProductCard";
-import type { addNewProductType } from '@/lib/api';
+import type { addNewProductType } from '@/lib/forms';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { zodValidator } from '@tanstack/zod-form-adapter';
@@ -28,6 +28,7 @@ import { z } from 'zod';
 interface AddProductFormProps {
 	userId: number;
 }
+const productsService = new ProductsApi();
 
 const freq_types = ['seconds', 'days', 'hours', 'minutes'] as const;
 const freq_ints = Array.from({ length: 60 }, (_, i) => i + 1);
@@ -36,7 +37,7 @@ export default function AddProduct({ userId }: AddProductFormProps) {
 	const navigate = useNavigate({ from: '/products' });
 	const authUser = localStorage.getItem('auth');
 	const mutation = useMutation({
-		mutationFn: addProductApi,
+		mutationFn: productsService.addProductApi,
 		onSuccess: (res) => {
 			console.log(res);
 			toast.success(`Successfully added product:`);

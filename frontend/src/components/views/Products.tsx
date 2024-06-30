@@ -1,8 +1,11 @@
-import { getAllUsersProductsApi } from '@/lib/api';
+import { ProductsApi } from '@/lib/api';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 // import ProductCard from "@/components/ProductCard";
 import AddProduct from './AddProduct';
+
+// const usersService = new UsersApi();
+const productsService = new ProductsApi();
 
 export default function Products() {
 	let userId: number = 0;
@@ -11,7 +14,7 @@ export default function Products() {
 
 	const getAllUsersProductsQueryOpts = queryOptions({
 		queryKey: ['get-all-products'],
-		queryFn: getAllUsersProductsApi,
+		queryFn: productsService.getAllUsersProductsApi,
 		staleTime: 1000 * 60 * 5,
 	});
 

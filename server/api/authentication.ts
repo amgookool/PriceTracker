@@ -15,7 +15,7 @@ export const authenticationRoute = new Hono()
 	.post('/login', zValidator('json', loginSchema), async (ctx) => {
 		const user = await ctx.req.valid('json');
 		try {
-			const { token, userId, username } = await AuthenticationService.login(user.username, user.password);
+			const { token, userId, username, email, role } = await AuthenticationService.login(user.username, user.password);
 			setCookie(ctx, 'access_token', token, {
 				httpOnly: true,
 				secure: true,
@@ -23,7 +23,7 @@ export const authenticationRoute = new Hono()
 				path: '/',
 				maxAge: 60 * 60 * 8, // 8 hours
 			});
-			return ctx.json({ token, userId, username });
+			return ctx.json({ token, userId, username, email, role });
 		} catch (e) {
 			const error = e as Error;
 			throw new HTTPException(401, {
@@ -46,7 +46,7 @@ export const authenticationRoute = new Hono()
 		});
 		return ctx.json({ message: 'Logged out successfully' });
 	})
-	.post('/validate-access-token', async (ctx) => {
+	.post('/validate_access_token', async (ctx) => {
 		const token = getCookie(ctx, 'access_token');
 		if (!token) {
 			throw new HTTPException(401, {

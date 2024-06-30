@@ -16,13 +16,11 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as DashboardAuthImport } from './routes/_dashboard/_auth'
+import { Route as DashboardAuthUsersImport } from './routes/_dashboard/_auth.users'
 
 // Create Virtual Routes
 
 const DashboardAuthIndexLazyImport = createFileRoute('/_dashboard/_auth/')()
-const DashboardAuthUsersLazyImport = createFileRoute(
-  '/_dashboard/_auth/users',
-)()
 const DashboardAuthSettingsLazyImport = createFileRoute(
   '/_dashboard/_auth/settings',
 )()
@@ -57,13 +55,6 @@ const DashboardAuthIndexLazyRoute = DashboardAuthIndexLazyImport.update({
   import('./routes/_dashboard/_auth.index.lazy').then((d) => d.Route),
 )
 
-const DashboardAuthUsersLazyRoute = DashboardAuthUsersLazyImport.update({
-  path: '/users',
-  getParentRoute: () => DashboardAuthRoute,
-} as any).lazy(() =>
-  import('./routes/_dashboard/_auth.users.lazy').then((d) => d.Route),
-)
-
 const DashboardAuthSettingsLazyRoute = DashboardAuthSettingsLazyImport.update({
   path: '/settings',
   getParentRoute: () => DashboardAuthRoute,
@@ -86,6 +77,11 @@ const DashboardAuthProductsLazyRoute = DashboardAuthProductsLazyImport.update({
 } as any).lazy(() =>
   import('./routes/_dashboard/_auth.products.lazy').then((d) => d.Route),
 )
+
+const DashboardAuthUsersRoute = DashboardAuthUsersImport.update({
+  path: '/users',
+  getParentRoute: () => DashboardAuthRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -112,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAuthImport
       parentRoute: typeof DashboardImport
     }
+    '/_dashboard/_auth/users': {
+      id: '/_dashboard/_auth/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof DashboardAuthUsersImport
+      parentRoute: typeof DashboardAuthImport
+    }
     '/_dashboard/_auth/products': {
       id: '/_dashboard/_auth/products'
       path: '/products'
@@ -133,13 +136,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAuthSettingsLazyImport
       parentRoute: typeof DashboardAuthImport
     }
-    '/_dashboard/_auth/users': {
-      id: '/_dashboard/_auth/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof DashboardAuthUsersLazyImport
-      parentRoute: typeof DashboardAuthImport
-    }
     '/_dashboard/_auth/': {
       id: '/_dashboard/_auth/'
       path: '/'
@@ -155,10 +151,10 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   DashboardRoute: DashboardRoute.addChildren({
     DashboardAuthRoute: DashboardAuthRoute.addChildren({
+      DashboardAuthUsersRoute,
       DashboardAuthProductsLazyRoute,
       DashboardAuthSchedulesLazyRoute,
       DashboardAuthSettingsLazyRoute,
-      DashboardAuthUsersLazyRoute,
       DashboardAuthIndexLazyRoute,
     }),
   }),
@@ -190,12 +186,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_dashboard/_auth.tsx",
       "parent": "/_dashboard",
       "children": [
+        "/_dashboard/_auth/users",
         "/_dashboard/_auth/products",
         "/_dashboard/_auth/schedules",
         "/_dashboard/_auth/settings",
-        "/_dashboard/_auth/users",
         "/_dashboard/_auth/"
       ]
+    },
+    "/_dashboard/_auth/users": {
+      "filePath": "_dashboard/_auth.users.tsx",
+      "parent": "/_dashboard/_auth"
     },
     "/_dashboard/_auth/products": {
       "filePath": "_dashboard/_auth.products.lazy.tsx",
@@ -207,10 +207,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_dashboard/_auth/settings": {
       "filePath": "_dashboard/_auth.settings.lazy.tsx",
-      "parent": "/_dashboard/_auth"
-    },
-    "/_dashboard/_auth/users": {
-      "filePath": "_dashboard/_auth.users.lazy.tsx",
       "parent": "/_dashboard/_auth"
     },
     "/_dashboard/_auth/": {
