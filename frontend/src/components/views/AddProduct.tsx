@@ -14,14 +14,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { ProductsApi } from '@/lib/api';
-import { cn } from '@/lib/utils';
-import { useNavigate } from '@tanstack/react-router';
-import { FaPlus } from 'react-icons/fa';
-// import ProductCard from "@/components/ProductCard";
 import type { addNewProductType } from '@/lib/forms';
+import { cn } from '@/lib/utils';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { zodValidator } from '@tanstack/zod-form-adapter';
+import { FaPlus } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -44,7 +43,7 @@ export default function AddProduct({ userId }: AddProductFormProps) {
 		},
 		onError: (error) => {
 			console.error('An error occurred: ', error.message);
-			toast.error(error.message || 'An error occurred');
+			toast.error(error.message ?? 'An error occurred');
 		},
 	});
 	const form = useForm({
