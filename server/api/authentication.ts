@@ -3,7 +3,6 @@ import { AuthenticationService } from '@server/services';
 import { Hono } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
-import { jwt } from 'hono/jwt';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -32,14 +31,6 @@ export const authenticationRoute = new Hono()
 			});
 		}
 	})
-	.use(
-		'/logout',
-		jwt({
-			secret: process.env.JWT_SECRET ?? 'secret',
-			alg: 'HS256',
-			cookie: 'access_token',
-		}),
-	)
 	.post('/logout', async (ctx) => {
 		deleteCookie(ctx, 'access_token', {
 			path: '/',

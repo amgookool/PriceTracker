@@ -6,22 +6,34 @@ import {
 	insertPriceHistoryModel,
 	insertProductModel,
 	updateProductModel,
+	// SchedulesTable,
+	// insertScheduleModel,
+	// updateScheduleModel,
 } from '@server/database/schemas';
 import type {
-	createPriceHistoryModelType,
 	createProductModelType,
-	createUpdateProductModelType,
 	selectProductModelType,
+	// createScheduleModelType,
+	// updateScheduleModelType,
 } from '@server/types';
 import { asc, desc, eq } from 'drizzle-orm';
 
-export const getProducts = async (): Promise<selectProductModelType[]> => {
+export const getProducts = async () => {
 	const products = await db.select().from(ProductsTable).orderBy(desc(ProductsTable.created_at));
 	return products;
 };
 
-export const getProductsWithPriceHistory = async () => {
-	const products = await await db.select().from(ProductsTable).orderBy(asc(ProductsTable.created_at));
+export const getProductsWithPriceHistory = async (userId?: number) => {
+	let products = [];
+	if (userId) {
+		products = await db
+			.select()
+			.from(ProductsTable)
+			.where(eq(ProductsTable.user_id, userId))
+			.orderBy(asc(ProductsTable.created_at));
+	} else {
+		products = await db.select().from(ProductsTable).orderBy(asc(ProductsTable.created_at));
+	}
 
 	const result = await Promise.all(
 		products.map(async (product) => {
@@ -39,7 +51,7 @@ export const getProductsWithPriceHistory = async () => {
 	return result;
 };
 
-export const getProductsByUserId = async (userId: number): Promise<selectProductModelType[]> => {
+export const getProductsByUserId = async (userId: number) => {
 	const products = await db
 		.select()
 		.from(ProductsTable)
@@ -63,7 +75,7 @@ export const getProductByProductId = async (productId: number) => {
 	};
 };
 
-export const addProduct = async (newProduct: createProductModelType): Promise<selectProductModelType> => {
+export const addProduct = async (newProduct: createProductModelType) => {
 	const validatedProduct = insertProductModel.parse(newProduct);
 	const scrapeResult = await scrapeAmazonProduct(validatedProduct.product_url);
 	validatedProduct.image_url = scrapeResult.imageLink;
@@ -73,28 +85,28 @@ export const addProduct = async (newProduct: createProductModelType): Promise<se
 		.values(validatedProduct)
 		.returning()
 		.then((res) => res[0]);
-	await addPriceHistory({
-		price: scrapeResult.price,
-		product_id: result.product_id,
-	});
+	// await addPriceHistory({
+	// 	price: scrapeResult.price,
+	// 	product_id: result.product_id,
+	// });
 	return result;
 };
 
-export const updateProduct = async (
-	productUpdate: createUpdateProductModelType,
-	productId: number,
-): Promise<selectProductModelType> => {
-	const validatedProduct = updateProductModel.parse(productUpdate);
-	// Filter out null or undefined values from the validatedUserBody
-	const jsonUpdate = Object.fromEntries(Object.entries(validatedProduct).filter(([_, value]) => value != null));
-	const result = await db
-		.update(ProductsTable)
-		.set({ ...jsonUpdate })
-		.where(eq(ProductsTable.product_id, productId))
-		.returning()
-		.then((res) => res[0]);
-	return result;
-};
+// export const updateProduct = async (
+// 	// productUpdate: createUpdateProductModelType,
+// 	productId: number,
+// ): Promise<selectProductModelType> => {
+// 	const validatedProduct = updateProductModel.parse(productUpdate);
+// 	// Filter out null or undefined values from the validatedUserBody
+// 	const jsonUpdate = Object.fromEntries(Object.entries(validatedProduct).filter(([_, value]) => value != null));
+// 	const result = await db
+// 		.update(ProductsTable)
+// 		.set({ ...jsonUpdate })
+// 		.where(eq(ProductsTable.product_id, productId))
+// 		.returning()
+// 		.then((res) => res[0]);
+// 	return result;
+// };
 
 export const deleteProduct = async (productId: number) => {
 	const result = await db
@@ -105,12 +117,12 @@ export const deleteProduct = async (productId: number) => {
 	return result;
 };
 
-export const addPriceHistory = async (price_hisory: createPriceHistoryModelType) => {
-	const validatedPriceHistory = insertPriceHistoryModel.parse(price_hisory);
-	const result = await db
-		.insert(PriceHistoriesTable)
-		.values(validatedPriceHistory)
-		.returning()
-		.then((res) => res[0]);
-	return result;
-};
+// export const addPriceHistory = async (price_hisory: createPriceHistoryModelType) => {
+// 	const validatedPriceHistory = insertPriceHistoryModel.parse(price_hisory);
+// 	const result = await db
+// 		.insert(PriceHistoriesTable)
+// 		.values(validatedPriceHistory)
+// 		.returning()
+// 		.then((res) => res[0]);
+// 	return result;
+// };

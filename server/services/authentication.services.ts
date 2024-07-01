@@ -1,6 +1,6 @@
 import { db } from '@server/database/index.ts';
 import { UsersTable } from '@server/database/schemas';
-import type { selectUserModelType } from '@server/types';
+import type { JwtPayloadType, selectUserModelType } from '@server/types';
 import { eq } from 'drizzle-orm';
 import { decode, sign, verify } from 'hono/jwt';
 
@@ -23,7 +23,7 @@ export const login = async (username: string, password: string) => {
 		email: user.email,
 		role: user.role,
 		exp: Math.floor(Date.now() / 1000) + 60 * expire_mins, // Token expires in minutes
-	};
+	} as JwtPayloadType;
 
 	const token = await sign(payload, process.env.JWT_SECRET || 'secret', 'HS256');
 	return {
@@ -38,14 +38,7 @@ export const login = async (username: string, password: string) => {
 export const verifyToken = async (token: string) => {
 	try {
 		const decodedPayload = await verify(token, process.env.JWT_SECRET || 'secret', 'HS256');
-
-		return decodedPayload as {
-			userId: number;
-			username: string;
-			email: string;
-			role: string;
-			exp: number;
-		};
+		return decodedPayload as JwtPayloadType;
 	} catch (e) {
 		const error = e as Error;
 		throw new Error(error.message);

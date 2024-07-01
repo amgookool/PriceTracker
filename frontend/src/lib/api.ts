@@ -79,25 +79,41 @@ export class ProductsApi {
 		}
 	}
 	async addProductApi(product: addNewProductType) {
-		console.log('Adding product');
-		console.log('Product:', product);
-		return {
-			ok: true,
-			message: 'Successfully added product',
-		};
+		type ProductsResType = InferResponseType<typeof api.products.$post>;
+		type SchedulesResType = InferResponseType<typeof api.schedules.$post>;
 
-		// type ResType = InferResponseType<typeof api.products.$post>;
-		// const response = await api.products.$post({
-		// 	json: product,
-		// });
-		// if (response.ok) {
-		// 	const res = await response.json();
-		// 	return res as ResType;
-		// } else {
-		// 	if (response.status === 401) {
-		// 		throw new Error('Invalid username or password');
-		// 	} else throw new Error('An error occurred');
-		// }
+		const response = await api.products.$post({
+			json: {
+				name: product.name,
+				website: product.website,
+				desired_price: product.desired_price,
+				product_url: product.product_url,
+				user_id: product.user_id,
+				description: product.description,
+				is_favorite: product.is_favorite,
+			},
+		});
+		if (response.ok) {
+			const res = (await response.json()) as ProductsResType;
+			const response2 = await api.schedules.$post({
+				json: {
+					user_id: product.user_id,
+					last_scraped_at: null,
+					job_name: res.name,
+					product_id: res.product_id,
+					scrape_interval: product.scrape_interval,
+				},
+			});
+			if (response2.ok) {
+				const res2 = (await response2.json()) as SchedulesResType;
+				return {
+					product: res,
+					schedule: res2,
+				};
+			} else throw new Error("An error occured adding product's schedule");
+		} else {
+			throw new Error('An error occurred adding product');
+		}
 	}
 }
 

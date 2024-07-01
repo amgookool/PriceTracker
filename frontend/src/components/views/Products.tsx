@@ -1,16 +1,15 @@
 import { ProductsApi } from '@/lib/api';
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
-// import ProductCard from "@/components/ProductCard";
+import type { ProductCardProps } from '../ProductCard';
+// import ProductCard from '../ProductCard';
+import ProductCard from '../ProductCard';
 import AddProduct from './AddProduct';
 
 // const usersService = new UsersApi();
 const productsService = new ProductsApi();
 
 export default function Products() {
-	let userId: number = 0;
-	const authUser = localStorage.getItem('auth');
-	const navigate = useNavigate({ from: '/products' });
+	const userId: number = 0;
 
 	const getAllUsersProductsQueryOpts = queryOptions({
 		queryKey: ['get-all-products'],
@@ -20,37 +19,53 @@ export default function Products() {
 
 	const { data, isPending, error, isError } = useQuery(getAllUsersProductsQueryOpts);
 
-	if (authUser && !isError) {
-		userId = parseInt(JSON.parse(authUser).userId);
+	if (isError) {
+		console.error(error);
+	} else if (isPending) {
+		return <h1>Loading...</h1>;
+	} else if (data && data.length === 0) {
+		return (
+			<>
+				<ProductPageHeading userId={userId} />
+				<h1>No Products</h1>
+			</>
+		);
 	} else {
-		console.error('An error occured fetching users products', error);
-		localStorage.clear();
-		navigate({ to: '/login', replace: true });
-	}
-
-	return (
-		<>
-			<div className="grid grid-cols-2">
-				<h1 className="text-4xl font-medium text-start ">Tracked Products</h1>
-				<AddProduct userId={userId} />
-			</div>
-
-			{isPending && <h1>Loading...</h1>}
-			{data && data.length === 0 && <h1>No products found</h1>}
-
-			{data && data.length > 0 && (
-				<div className="grid grid-cols-3 gap-4">
-					<h2>Product</h2>
-
-					{/* {data.map((product: any, idx: number) => (
-            <div key={idx} className="bg-white shadow-lg rounded-lg p-4">
-              <h1 className="text-lg font-semibold">{product.name}</h1>
-              <p className="text-sm text-muted-foreground">{product.description}</p>
-              <p className="text-sm text-muted-foreground">Price: {product.price}</p>
-            </div>
-          ))} */}
+		const products: ProductCardProps[] = [];
+		data?.forEach((product) => {
+			const p = {
+				name: product.name,
+				product_id: product.product_id,
+				description: product.description,
+				website: product.website,
+				image_url: product.image_url,
+				desired_price: product.desired_price,
+				site_product_name: product.site_product_name,
+				product_url: product.product_url,
+				is_favorite: product.is_favorite,
+				last_price: product.price_histories[product.price_histories.length - 1].price,
+				last_scraped_at: product.price_histories[product.price_histories.length - 1].created_at,
+			} as ProductCardProps;
+			products.push(p);
+		});
+		return (
+			<>
+				<ProductPageHeading userId={userId} />
+				<div className="grid grid-cols-2 gap-4">
+					{products.map((product) => (
+						<ProductCard key={product.product_id} {...product} />
+					))}
 				</div>
-			)}
-		</>
+			</>
+		);
+	}
+}
+
+function ProductPageHeading({ userId }: { userId: number }) {
+	return (
+		<div className="grid grid-cols-2">
+			<h1 className="text-4xl font-medium text-start ">Tracked Products</h1>
+			<AddProduct userId={userId} />
+		</div>
 	);
 }

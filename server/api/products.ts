@@ -4,9 +4,9 @@ import { ProductService } from '@server/services';
 import { createProductModel } from '@server/types';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-import { jwt } from 'hono/jwt';
+import { jwt, type JwtVariables } from 'hono/jwt';
 
-export const productsRoute = new Hono()
+export const productsRoute = new Hono<{ Variables: JwtVariables }>()
 	.use(
 		'*',
 		jwt({
@@ -17,9 +17,8 @@ export const productsRoute = new Hono()
 	)
 	.get('/', async (ctx) => {
 		const payload = ctx.get('jwtPayload');
-		console.log(payload);
 		try {
-			const results = await ProductService.getProductsWithPriceHistory();
+			const results = await ProductService.getProductsWithPriceHistory(payload?.user_id);
 			ctx.status(200);
 			return ctx.json(results);
 		} catch (e) {
