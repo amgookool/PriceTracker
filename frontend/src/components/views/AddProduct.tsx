@@ -461,9 +461,11 @@ export default function AddProduct({ userId }: AddProductFormProps) {
 									<form.Subscribe
 										selector={(state) => [state.canSubmit, state.isSubmitting]}
 										children={([canSubmit, isSubmitting]) => (
-											<Button type="submit" variant={'default'} disabled={!canSubmit}>
-												{isSubmitting ? '...' : 'Add'}
-											</Button>
+											<DialogClose asChild>
+												<Button type="submit" variant={'default'} disabled={!canSubmit}>
+													{isSubmitting ? 'Submitting...' : 'Add'}
+												</Button>
+											</DialogClose>
 										)}
 									/>
 								</div>

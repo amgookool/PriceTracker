@@ -21,8 +21,7 @@ export default function Products() {
 	const { data, isPending, error, isError } = useQuery(getAllUsersProductsQueryOpts);
 
 	if (authUser && !isError) {
-		const user = JSON.parse(authUser);
-		userId = parseInt(user.userId);
+		userId = parseInt(JSON.parse(authUser).userId);
 	} else {
 		console.error('An error occured fetching users products', error);
 		localStorage.clear();
