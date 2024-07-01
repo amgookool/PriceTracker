@@ -13,7 +13,7 @@
 		"**/rest": false,
 		"**/scheduler": true,
 		"**/scraper": true,
-		"**/.drizzle": true,
+		"**/.drizzle": false,
 		"**/.devcontainer": true
 	},
 	"terminal.integrated.cwd": "${workspaceFolder}",
@@ -33,5 +33,12 @@
 			"database": "./pricetracker.sqlite"
 		}
 	],
-	"sqltools.useNodeRuntime": true
+	"sqltools.useNodeRuntime": true,
+	"sqltools.results.reuseTabs": "connection",
+	"sqltools.results.location": "next",
+	"sqltools.format": {
+		"language": "sql",
+		"linesBetweenQueries": "preserve",
+		"reservedWordCase": "upper"
+	}
 }

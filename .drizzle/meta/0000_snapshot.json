@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "42be2f2b-7534-47fd-826c-c2f21368e099",
+  "id": "a4f1d59c-f1dd-475e-816e-569e6b00c5fa",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "price_histories": {
@@ -79,6 +79,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "is_favorite": {
+          "name": "is_favorite",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
         },
         "desired_price": {
           "name": "desired_price",
@@ -179,7 +187,7 @@
           "name": "product_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "user_id": {

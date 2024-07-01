@@ -10,6 +10,7 @@ CREATE TABLE `products` (
 	`product_id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text(255) NOT NULL,
 	`description` text(255),
+	`is_favorite` integer DEFAULT false,
 	`desired_price` real NOT NULL,
 	`product_url` text(255) NOT NULL,
 	`site_product_name` text(255),
@@ -24,7 +25,7 @@ CREATE TABLE `products` (
 --> statement-breakpoint
 CREATE TABLE `schedules` (
 	`schedule_id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`product_id` integer,
+	`product_id` integer NOT NULL,
 	`user_id` integer NOT NULL,
 	`last_scraped_at` text,
 	`job_name` text,

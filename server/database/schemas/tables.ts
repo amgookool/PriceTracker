@@ -62,7 +62,7 @@ export const SchedulesTable = sqliteTable('schedules', {
 		autoIncrement: true,
 		onConflict: 'rollback',
 	}),
-	product_id: integer('product_id'),
+	product_id: integer('product_id').notNull(),
 	user_id: integer('user_id')
 		.notNull()
 		.references(() => UsersTable.user_id),
