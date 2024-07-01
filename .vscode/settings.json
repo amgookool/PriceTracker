@@ -11,9 +11,9 @@
 		"**/frontend": false,
 		"**/server": false,
 		"**/rest": false,
-		"**/scheduler": false,
-		"**/scraper": false,
-		"**/.drizzle": false,
+		"**/scheduler": true,
+		"**/scraper": true,
+		"**/.drizzle": true,
 		"**/.devcontainer": true
 	},
 	"terminal.integrated.cwd": "${workspaceFolder}",
