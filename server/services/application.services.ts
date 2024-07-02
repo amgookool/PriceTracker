@@ -15,9 +15,8 @@ import type {
 	addNewProductType,
 	createPriceHistoryModelType,
 } from '@server/types';
-import {} from '@server/types';
 import { asc, desc, eq, and } from 'drizzle-orm';
-
+import { createTask, createJob, scheduler } from '@scheduler/scheduler';
 export const getUsersFavoriteProducts = async (userId: number) => {
 	const products = await db
 		.select()
@@ -58,10 +57,11 @@ export const addNewProduct = async (product: addNewProductType) => {
 		product_id: productInsertionId,
 	} as createPriceHistoryModelType;
 
+	const jobName = generateJobName(product.name, productInsertionId);
 	const scheduleTable_data = {
 		user_id: product.user_id,
 		scrape_interval: product.scrape_interval,
-		job_name: product.name,
+		job_name: jobName,
 		product_id: productInsertionId,
 	} as createScheduleModelType;
 
@@ -78,10 +78,44 @@ export const addNewProduct = async (product: addNewProductType) => {
 
 	await db.update(ProductsTable).set({ schedule_id: scheduleId }).where(eq(ProductsTable.product_id, productInsertionId));
 
+	// create job
+	const _task = createScrapeJob({
+		productId: productInsertionId,
+		productUrl: validatedProductData.product_url,
+		website: validatedProductData.website,
+	});
+	const taskFunction = async (taskId = jobName, jobId = `${scheduleId}`) => {
+		console.log('Task triggered: ', taskId, jobId);
+		return _task;
+	};
+	const task = createTask(jobName, taskFunction);
+	const job = createJob(task, validatedScheduleData.scrape_interval ?? '2 minutes', scheduleId);
+
+	scheduler.addSimpleIntervalJob(job);
+
 	return await db
 		.select()
 		.from(ProductsTable)
 		.leftJoin(PriceHistoriesTable, eq(PriceHistoriesTable.product_id, ProductsTable.product_id))
 		.leftJoin(SchedulesTable, eq(SchedulesTable.product_id, ProductsTable.product_id))
 		.where(eq(ProductsTable.product_id, productInsertionId));
+};
+
+export const createScrapeJob = async (configs: { productId: number; productUrl: string; website: string }) => {
+	let scrapeResult: { productTitle: string; imageLink: string; price: number };
+	if (configs.website === 'AMAZON') {
+		scrapeResult = await scrapeAmazonProduct(configs.productUrl);
+	} else {
+		scrapeResult = await scrapeNeweggProduct(configs.productUrl);
+	}
+	const priceHistoryEntry = {
+		price: scrapeResult.price,
+		product_id: configs.productId,
+	} as createPriceHistoryModelType;
+	await db.insert(PriceHistoriesTable).values(priceHistoryEntry);
+	return;
+};
+
+const generateJobName = (name: string, id: number) => {
+	return id + '_' + name.toLowerCase().trim().split(' ').join('_');
 };
