@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { PriceHistoriesTable, ProductsTable, SchedulesTable, UsersTable } from './tables';
 
 // Model for inserting a new user
-export const insertUserModel = createInsertSchema(UsersTable, {
+export const insertUserSchema = createInsertSchema(UsersTable, {
 	username: z
 		.string({
 			required_error: 'Username is required',
@@ -21,9 +21,9 @@ export const insertUserModel = createInsertSchema(UsersTable, {
 	password: z.string().min(8, { message: 'Password must be at least 8 characters long' }).trim(),
 });
 // Model for selecting a user
-export const selectUserModel = createSelectSchema(UsersTable);
+export const selectUserSchema = createSelectSchema(UsersTable);
 // Model for updating a user
-export const updateUserModel = createInsertSchema(UsersTable, {
+export const updateUserSchema = createInsertSchema(UsersTable, {
 	user_id: z.number().int().positive(),
 	username: z.string().optional().nullable(),
 	email: z.string().optional().nullable(),
@@ -32,7 +32,7 @@ export const updateUserModel = createInsertSchema(UsersTable, {
 });
 
 // Model for inserting a new Product
-export const insertProductModel = createInsertSchema(ProductsTable, {
+export const insertProductSchema = createInsertSchema(ProductsTable, {
 	name: z
 		.string({
 			required_error: 'Name is required',
@@ -57,7 +57,7 @@ export const insertProductModel = createInsertSchema(ProductsTable, {
 	schedule_id: z.number().int().positive().nullable(),
 });
 // Model for updating a product
-export const updateProductModel = createInsertSchema(ProductsTable, {
+export const updateProductSchema = createInsertSchema(ProductsTable, {
 	name: z.string().min(3, { message: 'Name must be at least 3 characters' }).trim().optional().nullable(),
 	description: z.string().trim().optional().nullable(),
 	is_favorite: z.boolean().optional().nullable(),
@@ -70,10 +70,10 @@ export const updateProductModel = createInsertSchema(ProductsTable, {
 	schedule_id: z.number().int().positive().nullable().optional(),
 });
 // Model for selecting a product
-export const selectProductModel = createSelectSchema(ProductsTable);
+export const selectProductSchema = createSelectSchema(ProductsTable);
 
 // Model for inserting a new schedule
-export const insertScheduleModel = createInsertSchema(SchedulesTable, {
+export const insertScheduleSchema = createInsertSchema(SchedulesTable, {
 	product_id: z.number({ required_error: 'The product ID is required' }).int().positive(),
 	user_id: z.number({ message: 'The user ID is required' }).int().positive(),
 	last_scraped_at: z.string().optional().nullable(),
@@ -81,9 +81,9 @@ export const insertScheduleModel = createInsertSchema(SchedulesTable, {
 	job_name: z.string().trim().optional().nullable(),
 });
 // Model for selecting a new schedule
-export const selectScheduleModel = createSelectSchema(SchedulesTable);
+export const selectScheduleSchema = createSelectSchema(SchedulesTable);
 // Model for updating a schedule
-export const updateScheduleModel = createInsertSchema(SchedulesTable, {
+export const updateScheduleSchema = createInsertSchema(SchedulesTable, {
 	last_scraped_at: z.date().optional().nullable(),
 	scrape_interval: z.string().trim().optional().nullable(),
 	user_id: z.number().int().positive().optional().nullable(),
@@ -92,7 +92,7 @@ export const updateScheduleModel = createInsertSchema(SchedulesTable, {
 });
 
 // Model for inserting a new price history
-export const insertPriceHistoryModel = createInsertSchema(PriceHistoriesTable, {
+export const insertPriceHistorySchema = createInsertSchema(PriceHistoriesTable, {
 	product_id: z
 		.number({
 			required_error: 'Product ID is required',
@@ -109,4 +109,4 @@ export const insertPriceHistoryModel = createInsertSchema(PriceHistoriesTable, {
 		.finite({ message: 'Price must be finite' }),
 });
 // Model for selecting a price history
-export const selectPriceHistoryModel = createSelectSchema(PriceHistoriesTable);
+export const selectPriceHistorySchema = createSelectSchema(PriceHistoriesTable);

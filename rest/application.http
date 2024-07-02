@@ -1,0 +1,40 @@
+@userID=1
+@productId=1
+@token = {{login.response.body.$.token}}
+
+###
+
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username":"admin",
+    "password":"P@ssword123!"
+}
+###
+
+
+# @name getProducts
+GET {{baseUrl}}/products
+?getFavorites=true
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# @name addProduct
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Wireless Phone Charger",
+    "scrape_interval": "2 minutes",
+    "description": "This is a phone charger for apple watch, phone and airpods",
+    "product_url": "https://www.amazon.com/dp/B0C2BMNHW2?ref=cm_sw_r_cp_ud_dp_KTCK5K3AHPPFJ4SCYTR7&ref_=cm_sw_r_cp_ud_dp_KTCK5K3AHPPFJ4SCYTR7&social_share=cm_sw_r_cp_ud_dp_KTCK5K3AHPPFJ4SCYTR7",
+    "desired_price": 16.99,
+    "website": "AMAZON",
+    "is_favorite": true,
+    "user_id": 1,
+}

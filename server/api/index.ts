@@ -1,6 +1,5 @@
-import { authenticationRoute } from "./authentication";
-import { productsRoute } from "./products";
-import { schedulesRoute } from "./schedules";
-import { usersRoute } from "./users";
+import { authenticationRoute } from './authentication';
+import { appRoutes } from './application';
+import { usersRoute } from './users';
 
-export { authenticationRoute, productsRoute, schedulesRoute, usersRoute };
+export { authenticationRoute, appRoutes, usersRoute };

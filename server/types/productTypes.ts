@@ -1,40 +1,37 @@
-import { insertPriceHistoryModel, insertProductModel, selectProductModel, updateProductModel } from '@server/database/schemas';
-import { insertScheduleModel, selectScheduleModel, updateScheduleModel } from '@server/database/schemas';
+import {
+	insertPriceHistorySchema,
+	insertProductSchema,
+	selectPriceHistorySchema,
+	selectProductSchema,
+	updateProductSchema,
+} from '@server/database/schemas';
 
 import { z } from 'zod';
 
-const createScheduleModel = insertScheduleModel.omit({
+export const createProductModel = insertProductSchema.omit({
 	created_at: true,
 	updated_at: true,
-	schedule_id: true,
-});
-
-export { createScheduleModel, updateScheduleModel };
-export type selectScheduleModelType = z.infer<typeof selectScheduleModel>;
-export type updateScheduleModelType = z.infer<typeof updateScheduleModel>;
-export type createScheduleModelType = z.infer<typeof createScheduleModel>;
-
-export const createProductModel = insertProductModel.omit({
-	created_at: true,
-	updated_at: true,
-	image_url: true,
 	schedule_id: true,
 	product_id: true,
-	site_product_name: true,
 });
 
-export const createUpdateProductModel = updateProductModel.omit({
+export const updateProductModel = updateProductSchema.omit({
 	created_at: true,
 	updated_at: true,
 	product_id: true,
 });
 
-export const createPriceHistoryModel = insertPriceHistoryModel.omit({
+export const readProductModel = selectProductSchema;
+
+export const createPriceHistoryModel = insertPriceHistorySchema.omit({
 	created_at: true,
 	price_history_id: true,
 });
 
+export const readPriceHistoryModel = selectPriceHistorySchema;
+
 export type createProductModelType = z.infer<typeof createProductModel>;
-export type createUpdateProductModelType = z.infer<typeof createUpdateProductModel>;
-export type selectProductModelType = z.infer<typeof selectProductModel>;
+export type updateProductModelType = z.infer<typeof updateProductModel>;
+export type readProductModelType = z.infer<typeof readProductModel>;
 export type createPriceHistoryModelType = z.infer<typeof createPriceHistoryModel>;
+export type readPriceHistoryModelType = z.infer<typeof readPriceHistoryModel>;

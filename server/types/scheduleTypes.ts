@@ -1,13 +1,19 @@
-import { insertScheduleModel, selectScheduleModel, updateScheduleModel } from '@server/database/schemas';
+import { insertScheduleSchema, selectScheduleSchema, updateScheduleSchema } from '@server/database/schemas';
 import { z } from 'zod';
 
-const createScheduleModel = insertScheduleModel.omit({
+export const createScheduleModel = insertScheduleSchema.omit({
+	created_at: true,
+	updated_at: true,
+	schedule_id: true,
+});
+export const updateScheduleModel = updateScheduleSchema.omit({
 	created_at: true,
 	updated_at: true,
 	schedule_id: true,
 });
 
-export { createScheduleModel, updateScheduleModel };
-export type selectScheduleModelType = z.infer<typeof selectScheduleModel>;
-export type updateScheduleModelType = z.infer<typeof updateScheduleModel>;
+export const readScheduleModel = selectScheduleSchema;
+
 export type createScheduleModelType = z.infer<typeof createScheduleModel>;
+export type updateScheduleModelType = z.infer<typeof updateScheduleModel>;
+export type readScheduleModelType = z.infer<typeof readScheduleModel>;
