@@ -1,10 +1,12 @@
 import { zValidator } from '@hono/zod-validator';
 import { UserService } from '@server/services';
-import { createUpdateUserModel, createUserModel } from '@server/types';
+import { type createUserModelType, updateUserModel, createUserModel } from '@server/types';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-import { jwt } from 'hono/jwt';
-export const usersRoute = new Hono()
+import { jwt, type JwtVariables } from 'hono/jwt';
+import type { JwtPayloadType } from '@server/types';
+
+export const usersRoute = new Hono<{ Variables: JwtVariables }>()
 	.use(
 		'*',
 		jwt({
@@ -13,7 +15,10 @@ export const usersRoute = new Hono()
 			cookie: 'access_token',
 		}),
 	)
+	// Admin: Get All Users
 	.get('/', async (ctx) => {
+		const payload: JwtPayloadType = ctx.get('jwtPayload');
+		if (payload.role !== 'ADMIN') throw new HTTPException(401, { message: 'Unauthorized' });
 		try {
 			const result = await UserService.getUsers();
 			ctx.status(200);
@@ -27,22 +32,27 @@ export const usersRoute = new Hono()
 			});
 		}
 	})
+	// Admin: Create New User
 	.post('/', zValidator('json', createUserModel), async (ctx) => {
-		const newUser = await ctx.req.valid('json');
+		const newUserFormData = await ctx.req.valid('json');
+		const payload = ctx.get('jwtPayload');
+		if (payload.role !== 'ADMIN') throw new HTTPException(401, { message: 'Unauthorized' });
+		const validatedData: createUserModelType = createUserModel.parse(newUserFormData);
 		try {
-			const result = await UserService.createUser(newUser);
+			const result = await UserService.createUser(validatedData);
 			ctx.status(201);
 			return ctx.json(result);
 		} catch (e) {
 			const error = e as Error;
-			console.log(error.message);
+			console.error(error);
 			throw new HTTPException(500, {
 				message: `${error.message}`,
 				cause: error,
 			});
 		}
 	})
-	.get('/:userId{[0-9]+}', async (ctx) => {
+	// Admin & User: Get User
+	.get('/:userId{[0-9]}', async (ctx) => {
 		const { userId } = ctx.req.param();
 		try {
 			const result = await UserService.getUserById(parseInt(userId));
@@ -57,7 +67,8 @@ export const usersRoute = new Hono()
 			});
 		}
 	})
-	.put('/:userId{[0-9]}', zValidator('json', createUpdateUserModel), async (ctx) => {
+	// Admin & User: Update User
+	.put('/:userId{[0-9]}', zValidator('json', updateUserModel), async (ctx) => {
 		const { userId } = ctx.req.param();
 		const userUpdate = await ctx.req.valid('json');
 		try {
@@ -73,8 +84,11 @@ export const usersRoute = new Hono()
 			});
 		}
 	})
+	// Admin: Delete User
 	.delete('/:userId{[0-9]}', async (ctx) => {
 		const { userId } = ctx.req.param();
+		const payload = ctx.get('jwtPayload');
+		if (payload.role !== 'ADMIN') throw new HTTPException(401, { message: 'Unauthorized' });
 		try {
 			const result = await UserService.deleteUser(parseInt(userId));
 			ctx.status(202);

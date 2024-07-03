@@ -1,6 +1,6 @@
 import { db } from '@server/database/index.ts';
 import { UsersTable } from '@server/database/schemas';
-import type { JwtPayloadType, selectUserModelType } from '@server/types';
+import type { JwtPayloadType } from '@server/types';
 import { eq } from 'drizzle-orm';
 import { decode, sign, verify } from 'hono/jwt';
 
@@ -9,7 +9,7 @@ export const login = async (username: string, password: string) => {
 		.select()
 		.from(UsersTable)
 		.where(eq(UsersTable.username, username))
-		.then((res) => res[0] as selectUserModelType);
+		.then((res) => res[0]);
 
 	if (!user) throw new Error('User not found');
 

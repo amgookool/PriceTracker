@@ -1,4 +1,4 @@
-import scheduler, { createJob, createTask } from '@scheduler/index';
+import scheduler, { ScheduleService } from '@scheduler/index';
 import { scrapeAmazonProduct } from '@scraper/amazon.tracker';
 import { scrapeNeweggProduct } from '@scraper/newegg.tracker';
 import { db } from '@server/database/index.ts';
@@ -50,6 +50,16 @@ export const getUsersProducts = async (userId: number) => {
 		.orderBy(desc(ProductsTable.created_at));
 
 	return products;
+};
+
+export const getProductByProductId = async (productId: number, userId: number) => {
+	const product = await db
+		.select()
+		.from(ProductsTable)
+		.leftJoin(PriceHistoriesTable, eq(PriceHistoriesTable.product_id, ProductsTable.product_id))
+		.leftJoin(SchedulesTable, eq(SchedulesTable.product_id, ProductsTable.product_id))
+		.where(and(eq(ProductsTable.product_id, productId), eq(ProductsTable.user_id, userId)));
+	return product;
 };
 
 /**
@@ -120,8 +130,8 @@ export const addNewProduct = async (product: clientAddProductModelType) => {
 			website: validatedProductData.website,
 		});
 	};
-	const task = createTask(jobName, _task);
-	const job = createJob(task, validatedScheduleData.scrape_interval ?? '1 days', scheduleId);
+	const task = ScheduleService.createTask(jobName, _task);
+	const job = ScheduleService.createJob(task, validatedScheduleData.scrape_interval ?? '1 days', scheduleId);
 
 	scheduler.addSimpleIntervalJob(job);
 	// return product
@@ -185,6 +195,30 @@ const generateJobName = (name: string, id: number) => {
 	return id + '_' + name.toLowerCase().trim().split(' ').join('_');
 };
 
+export const getScheduleByScheduleIdAndUserId = async (schedule_id: number, user_id: number) => {
+	const result = await db
+		.select()
+		.from(SchedulesTable)
+		.where(and(eq(SchedulesTable.schedule_id, schedule_id), eq(SchedulesTable.user_id, user_id)))
+		.then((res) => res[0]);
+	return result;
+};
+
+export const getSchedulesByUserId = async (user_id: number) => {
+	const result = await db.select().from(SchedulesTable).where(eq(SchedulesTable.user_id, user_id));
+	return result;
+};
+
+export const getAllSchedules = async () => {
+	const results = await db
+		.select()
+		.from(SchedulesTable)
+		.catch((e) => {
+			console.error(e);
+			return [];
+		});
+	return results;
+};
 // export const updateSchedule = async (schedule: updateScheduleModelType, schedule_id: number) => {
 // 	const validatedUserBody = updateScheduleModel.parse(schedule);
 // 	const jsonUpdate = Object.fromEntries(Object.entries(validatedUserBody).filter(([_, value]) => value != null));

@@ -30,6 +30,7 @@ export const clientUpdateProductModel = updateProductSchema
 	.omit({
 		created_at: true,
 		updated_at: true,
+		product_id: true,
 	})
 	.extend({
 		scrape_interval: z.string().trim().nullable().optional(),

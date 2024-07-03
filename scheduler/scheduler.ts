@@ -73,10 +73,8 @@ export const startJob = (scheduleId: number) => {
 export const removeJob = (scheduleId: number) => {
 	if (scheduler.existsById(`${scheduleId}`)) {
 		scheduler.removeById(`${scheduleId}`);
-		return;
-	} else {
-		throw new Error('Job not found');
-	}
+		return true;
+	} else return false;
 };
 
 /**
@@ -106,6 +104,7 @@ export const updateJobInterval = (scheduleId: number, jobInterval: string, task:
 	if (scheduler.existsById(`${scheduleId}`)) {
 		scheduler.removeById(`${scheduleId}`);
 	}
+
 	const schedule = jobInterval.split(' ');
 	const integer = parseInt(schedule[0]);
 	const unit = schedule[1];

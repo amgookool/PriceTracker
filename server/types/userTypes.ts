@@ -12,7 +12,9 @@ export const updateUserModel = updateUserSchema.omit({
 	created_at: true,
 	updated_at: true,
 });
-export const readUserModel = selectUserSchema;
+export const readUserModel = selectUserSchema.omit({
+	password: true,
+});
 
 export type readUserModelType = z.infer<typeof readUserModel>;
 export type createUserModelType = z.infer<typeof createUserModel>;

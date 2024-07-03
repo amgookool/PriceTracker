@@ -9,6 +9,6 @@ import {
 	scheduler,
 } from '@scheduler/scheduler';
 
-export { createJob, startJob, stopJob, removeJob, getJobStatus, updateJobInterval, createTask };
+export const ScheduleService = { createJob, startJob, stopJob, removeJob, getJobStatus, updateJobInterval, createTask };
 
 export default scheduler;

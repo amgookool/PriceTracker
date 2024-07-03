@@ -1,6 +1,15 @@
-import { createUser, deleteUser, getUserById, getUsers, migrateUser, updateUser } from '@server/services/users.services';
-import { addNewProduct, getUsersFavoriteProducts, updateProduct, getUsersProducts } from '@server/services/application.services';
+import {
+	addNewProduct,
+	getProductByProductId,
+	getScheduleByScheduleIdAndUserId,
+	getSchedulesByUserId,
+	getUsersFavoriteProducts,
+	getUsersProducts,
+	updateProduct,
+	getAllSchedules,
+} from '@server/services/application.services';
 import { decodeToken, login, verifyToken } from '@server/services/authentication.services';
+import { createUser, deleteUser, getUserById, getUsers, migrateUser, updateUser } from '@server/services/users.services';
 
 export const AuthenticationService = {
 	decodeToken,
@@ -22,4 +31,8 @@ export const ApplicationService = {
 	updateProduct,
 	getUsersProducts,
 	getUsersFavoriteProducts,
+	getProductByProductId,
+	getScheduleByScheduleIdAndUserId,
+	getSchedulesByUserId,
+	getAllSchedules,
 };
