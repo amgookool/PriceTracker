@@ -28,7 +28,6 @@ export class AuthorizationApi {
 		const response = await api.auth.logout.$post();
 		if (response.ok) {
 			const res = await response.json();
-			console.log(res);
 			return res as ResType;
 		} else {
 			if (response.status === 401) {
@@ -66,7 +65,7 @@ export class UsersApi {
 }
 
 export class ProductsApi {
-	async getAllUsersProductsApi() {
+	async getUsersProductsApi() {
 		type ResType = InferResponseType<typeof api.products.$get>;
 		const response = await api.products.$get();
 		if (response.ok) {
@@ -79,41 +78,41 @@ export class ProductsApi {
 		}
 	}
 	async addProductApi(product: addNewProductType) {
-		type ProductsResType = InferResponseType<typeof api.products.$post>;
-		type SchedulesResType = InferResponseType<typeof api.schedules.$post>;
-
-		const response = await api.products.$post({
-			json: {
-				name: product.name,
-				website: product.website,
-				desired_price: product.desired_price,
-				product_url: product.product_url,
-				user_id: product.user_id,
-				description: product.description,
-				is_favorite: product.is_favorite,
-			},
-		});
-		if (response.ok) {
-			const res = (await response.json()) as ProductsResType;
-			const response2 = await api.schedules.$post({
-				json: {
-					user_id: product.user_id,
-					last_scraped_at: null,
-					job_name: res.name,
-					product_id: res.product_id,
-					scrape_interval: product.scrape_interval,
-				},
-			});
-			if (response2.ok) {
-				const res2 = (await response2.json()) as SchedulesResType;
-				return {
-					product: res,
-					schedule: res2,
-				};
-			} else throw new Error("An error occured adding product's schedule");
-		} else {
-			throw new Error('An error occurred adding product');
-		}
+		// api.products.
+		// type ProductsResType = InferResponseType<typeof api.products.$post>;
+		// type SchedulesResType = InferResponseType<typeof api.schedules.$post>;
+		// const response = await api.products.$post({
+		// 	json: {
+		// 		name: product.name,
+		// 		website: product.website,
+		// 		desired_price: product.desired_price,
+		// 		product_url: product.product_url,
+		// 		user_id: product.user_id,
+		// 		description: product.description,
+		// 		is_favorite: product.is_favorite,
+		// 	},
+		// });
+		// if (response.ok) {
+		// 	const res = (await response.json()) as ProductsResType;
+		// 	const response2 = await api.schedules.$post({
+		// 		json: {
+		// 			user_id: product.user_id,
+		// 			last_scraped_at: null,
+		// 			job_name: res.name,
+		// 			product_id: res.product_id,
+		// 			scrape_interval: product.scrape_interval,
+		// 		},
+		// 	});
+		// 	if (response2.ok) {
+		// 		const res2 = (await response2.json()) as SchedulesResType;
+		// 		return {
+		// 			product: res,
+		// 			schedule: res2,
+		// 		};
+		// 	} else throw new Error("An error occured adding product's schedule");
+		// } else {
+		// 	throw new Error('An error occurred adding product');
+		// }
 	}
 }
 

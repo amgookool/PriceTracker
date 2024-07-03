@@ -12,20 +12,17 @@ import {
 	type clientUpdateProductModelType,
 } from '@server/types';
 
-export const appRoutes = new Hono<{ Variables: JwtVariables }>();
-
-appRoutes.use(
-	'/products/*',
-	jwt({
-		secret: process.env.JWT_SECRET ?? 'secret',
-		alg: 'HS256',
-		cookie: 'access_token',
-	}),
-);
-
-appRoutes
+export const productRoutes = new Hono<{ Variables: JwtVariables }>()
+	.use(
+		'*',
+		jwt({
+			secret: process.env.JWT_SECRET ?? 'secret',
+			alg: 'HS256',
+			cookie: 'access_token',
+		}),
+	)
 	// Get Users Products
-	.get('/products', async (ctx) => {
+	.get('/', async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const query = await ctx.req.query();
 
@@ -47,7 +44,7 @@ appRoutes
 		}
 	})
 	// Add new Product for User
-	.post('/products', zValidator('json', clientAddProductModel), async (ctx) => {
+	.post('/', zValidator('json', clientAddProductModel), async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const validatedData: clientAddProductModelType = ctx.req.valid('json');
 
@@ -59,7 +56,7 @@ appRoutes
 		return ctx.json(product);
 	})
 	// Update Product for User
-	.put('/products/:productId{[0-9]}', zValidator('json', clientUpdateProductModel), async (ctx) => {
+	.put('/:productId{[0-9]}', zValidator('json', clientUpdateProductModel), async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const { productId } = ctx.req.param();
 		const validatedData: clientUpdateProductModelType = ctx.req.valid('json');
@@ -73,7 +70,7 @@ appRoutes
 		});
 	})
 	// Get User Product by ID
-	.get('/products/:productId{[0-9]}', async (ctx) => {
+	.get('/:productId{[0-9]}', async (ctx) => {
 		const { productId } = ctx.req.param();
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const product = await ApplicationService.getProductByProductId(parseInt(productId), payload.userId);
@@ -81,18 +78,17 @@ appRoutes
 		return ctx.json(product);
 	});
 
-appRoutes.use(
-	'/schedules/*',
-	jwt({
-		secret: process.env.JWT_SECRET ?? 'secret',
-		alg: 'HS256',
-		cookie: 'access_token',
-	}),
-);
-
-appRoutes
+export const scheduleRoutes = new Hono<{ Variables: JwtVariables }>()
+	.use(
+		'*',
+		jwt({
+			secret: process.env.JWT_SECRET ?? 'secret',
+			alg: 'HS256',
+			cookie: 'access_token',
+		}),
+	)
 	// Admin: Get All Schedules
-	.get('/schedules', async (ctx) => {
+	.get('/', async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		if (payload.role !== 'ADMIN') throw new HTTPException(400, { message: 'Invalid User Role', cause: 'Invalid User Role' });
 		const result = await ApplicationService.getAllSchedules();
@@ -100,7 +96,7 @@ appRoutes
 		return ctx.json(result);
 	})
 	// Get Schedules By User ID
-	.get('/schedules/:userId{[0-9]}', async (ctx) => {
+	.get('/:userId{[0-9]}', async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const { userId } = ctx.req.param();
 		if (payload.userId !== parseInt(userId))
@@ -110,7 +106,7 @@ appRoutes
 		return ctx.json(schedules);
 	})
 	// Get User Schedule by Schedule ID
-	.get('/schedules/:scheduleId{[0-9]}', async (ctx) => {
+	.get('/:scheduleId{[0-9]}', async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const { scheduleId } = ctx.req.param();
 		const result = await ApplicationService.getScheduleByScheduleIdAndUserId(parseInt(scheduleId), payload.userId);
@@ -118,7 +114,7 @@ appRoutes
 		return ctx.json(result);
 	})
 	// Get User Schedule Status by Schedule ID
-	.get('/schedules/:scheduleId{[0-9]}/status', async (ctx) => {
+	.get('/:scheduleId{[0-9]}/status', async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const { scheduleId } = ctx.req.param();
 		const result = await ApplicationService.getScheduleByScheduleIdAndUserId(parseInt(scheduleId), payload.userId);
@@ -132,7 +128,7 @@ appRoutes
 		});
 	})
 	// Stop The Schedule Job By Schedule ID
-	.get('/schedules/:scheduleId{[0-9]}/stop', async (ctx) => {
+	.get('/:scheduleId{[0-9]}/stop', async (ctx) => {
 		const payload: JwtPayloadType = ctx.get('jwtPayload');
 		const { scheduleId } = ctx.req.param();
 		const result = await ApplicationService.getScheduleByScheduleIdAndUserId(parseInt(scheduleId), payload.userId);
@@ -146,4 +142,4 @@ appRoutes
 		});
 	})
 	// Update the Job Schedule
-	.put('/schedules/:scheduleId{[0-9]}', zValidator('json', clientUpdateProductModel), async (ctx) => {});
+	.put('/:scheduleId{[0-9]}', zValidator('json', clientUpdateProductModel), async (ctx) => {});

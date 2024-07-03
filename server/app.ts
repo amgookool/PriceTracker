@@ -1,4 +1,4 @@
-import { authenticationRoute, appRoutes, usersRoute } from '@server/api/index';
+import { authenticationRoute, productRoutes, scheduleRoutes, usersRoute } from '@server/api/index';
 import { Hono } from 'hono';
 import { serveStatic } from 'hono/bun';
 import { csrf } from 'hono/csrf';
@@ -10,7 +10,12 @@ app.use(csrf());
 app.use('*', logger());
 app.use(trimTrailingSlash());
 
-const apiRoutes = app.basePath('/api').route('/', appRoutes).route('/users', usersRoute).route('/auth', authenticationRoute);
+const apiRoutes = app
+	.basePath('/api')
+	.route('/products', productRoutes)
+	.route('/schedules', scheduleRoutes)
+	.route('/users', usersRoute)
+	.route('/auth', authenticationRoute);
 
 app.get('*', serveStatic({ root: './frontend/dist' }));
 app.get('*', serveStatic({ path: './frontend/dist/index.html' }));
