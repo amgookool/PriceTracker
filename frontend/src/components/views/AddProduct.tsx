@@ -14,8 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { ProductsApi } from '@/lib/api';
-import type { addNewProductType } from '@/lib/forms';
 import { cn } from '@/lib/utils';
+import { clientAddProductModelType } from '@server/types';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
@@ -68,13 +68,12 @@ export default function AddProduct({ userId }: AddProductFormProps) {
 				description: value.description ?? null,
 				is_favorite: value.is_favorite,
 				scrape_interval: `${value.scrape_frequency_int} ${value.scrape_frequency_type}`,
-			} as addNewProductType;
+			} as clientAddProductModelType;
 			mutation.mutate(postData);
 		},
 		validatorAdapter: zodValidator,
 	});
 	if (authUser) {
-		const userId = JSON.parse(authUser).userId;
 		return (
 			<>
 				<Dialog>

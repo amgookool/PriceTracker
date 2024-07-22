@@ -1,7 +1,7 @@
 import type { ApiRoutes } from '@server/app';
 import type { InferResponseType } from 'hono/client';
 import { hc } from 'hono/client';
-import { addNewProductType } from './forms';
+import { clientAddProductModelType } from '@server/types';
 
 const apiClient = hc<ApiRoutes>('/');
 
@@ -77,8 +77,18 @@ export class ProductsApi {
 			} else throw new Error('An error occurred');
 		}
 	}
-	async addProductApi(product: addNewProductType) {
-		// api.products.
+	async addProductApi(product: clientAddProductModelType) {
+		console.log(product);
+		type AddProductsResponseType = InferResponseType<typeof api.products.$post>;
+		const response = await api.products.$post({
+			json: { ...product },
+		});
+
+		if (response.ok) {
+			const res: AddProductsResponseType = await response.json();
+			console.log(res);
+		}
+
 		// type ProductsResType = InferResponseType<typeof api.products.$post>;
 		// type SchedulesResType = InferResponseType<typeof api.schedules.$post>;
 		// const response = await api.products.$post({

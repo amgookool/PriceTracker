@@ -7,13 +7,13 @@ import AddProduct from './AddProduct';
 
 // const usersService = new UsersApi();
 const productsService = new ProductsApi();
+const authUser = JSON.parse(localStorage.getItem('auth') ?? '{}');
+const userId = authUser.userId;
 
 export default function Products() {
-	const userId: number = 0;
-
 	const getAllUsersProductsQueryOpts = queryOptions({
 		queryKey: ['get-all-products'],
-		queryFn: productsService.getAllUsersProductsApi,
+		queryFn: productsService.getUsersProductsApi,
 		staleTime: 1000 * 60 * 5,
 	});
 
@@ -32,21 +32,8 @@ export default function Products() {
 		);
 	} else {
 		const products: ProductCardProps[] = [];
-		data?.forEach((product) => {
-			const p = {
-				name: product.name,
-				product_id: product.product_id,
-				description: product.description,
-				website: product.website,
-				image_url: product.image_url,
-				desired_price: product.desired_price,
-				site_product_name: product.site_product_name,
-				product_url: product.product_url,
-				is_favorite: product.is_favorite,
-				last_price: product.price_histories[product.price_histories.length - 1].price,
-				last_scraped_at: product.price_histories[product.price_histories.length - 1].created_at,
-			} as ProductCardProps;
-			products.push(p);
+		data?.forEach((d) => {
+			console.log(d);
 		});
 		return (
 			<>
